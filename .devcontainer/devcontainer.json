@@ -1,0 +1,26 @@
+{
+	"name": "aio - payments",
+
+	"dockerComposeFile": "docker-compose.yml",
+	"service": "app",
+		
+	"workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}",
+
+	// "postCreateCommand": "npm install",
+	// "postAttachCommand": "npm run storybook:ci",
+	
+	"forwardPorts": [
+		6006, 8080
+	],
+	"customizations": {
+		"vscode": {
+			"extensions": [
+				"ryanluker.vscode-coverage-gutters"
+			]
+		}
+	},
+	"features": {
+		"ghcr.io/christophermacgown/devcontainer-features/direnv:1": {}
+	}
+
+}
