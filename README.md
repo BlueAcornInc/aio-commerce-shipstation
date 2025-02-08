@@ -4,6 +4,7 @@ ShipStation App for Adobe Commerce! This will be a playground to dupe the shippi
 
 ## ShipStation Getting Started
 
+* [This Project in Adobe App Builder Developer Console](https://developer.adobe.com/console/projects/35582/4566206088345338585/overview)
 * [ShipStation API docs](https://docs.shipstation.com)
 * [Adobe's Intital Sizing Doc with Reqs](https://groupinfosysus.sharepoint.com/:w:/s/AppBuilderTeam/EUx3Q61jBe5EoFmPFISPj3kBw5bZ9KG4G6n_4lN6NYJTOg?e=DHyJdX)
 
