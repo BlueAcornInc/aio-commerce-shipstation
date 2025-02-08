@@ -1,7 +1,7 @@
 application:
   runtimeManifest:
     packages:
-      aio-payments:
+      aio-commerce-shipstation-app:
         license: Apache-2.0
         actions:
           api-mesh-query-content:
