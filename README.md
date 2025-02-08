@@ -1,6 +1,29 @@
-# App Builder Payments Modules
+# ShipStation for Adobe App Builder
 
-This repo contains project details and a space to begin building the App Builder payment modules required for Stripe and Adyen.
+ShipStation App for Adobe Commerce! This will be a playground to dupe the shipping functionality from the checkout starter, and will eventually become the full shipstation app
+
+## ShipStation Getting Started
+
+* [ShipStation API docs](https://docs.shipstation.com)
+* [Adobe's Intital Sizing Doc with Reqs](https://groupinfosysus.sharepoint.com/:w:/s/AppBuilderTeam/EUx3Q61jBe5EoFmPFISPj3kBw5bZ9KG4G6n_4lN6NYJTOg?e=DHyJdX)
+* [Blue Acorn SOW for App Builder including Shipstation Work](https://docs.google.com/document/d/1csPluOejPnCXAH52mUQL5AYoNUHlqvre/edit)
+
+## Initial Scope Shared with Adobe
+
+### From Adobe Sizing Doc
+
+>  Integrate to shipstation shipping extension
+https://commercemarketplace.adobe.com/auctane-api.html
+
+### From Blue Acorn SOW
+
+Shipstation Module will integrate with Adobe Commerce, leveraging out-of-process extensibility techniques to introduce ShipStation shipping details into the native buyer experience. No ShipStation customizations (in-depth styling or customizations) in MVP implementation.
+
+* Base functionality for MVP, targeted in this SOW includes:
+  * Core ShipStation integration to enable basic order fulfillment
+* Base functionality will not include:
+  * Shipment tracking label generation
+  * The system can connect with the ShipStation platform and sync orders from Adobe Commerce
 
 ## Getting Started
 
