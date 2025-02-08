@@ -60,4 +60,8 @@ This project has a .devcontainer directory which contains a composition capable 
 This project is also hosted in Github, where a Codespace can be used to potentially run this project. This environment is provided as-is, and developers to this project are free to leverage their own stacks. 
 
 
+  ## Open Questions
+
+  x. naming and title convetions for app builder app
+  x. best template for aio app builder app?
   
