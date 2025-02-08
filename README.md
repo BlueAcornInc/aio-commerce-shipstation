@@ -8,14 +8,12 @@ ShipStation App for Adobe Commerce! This will be a playground to dupe the shippi
 * [Adobe's Intital Sizing Doc with Reqs](https://groupinfosysus.sharepoint.com/:w:/s/AppBuilderTeam/EUx3Q61jBe5EoFmPFISPj3kBw5bZ9KG4G6n_4lN6NYJTOg?e=DHyJdX)
 
 
-## Initial Scope Shared with Adobe
-
-### From Adobe Sizing Doc
+## Initial Scope Shared by Adobe
 
 >  Integrate to shipstation shipping extension
 https://commercemarketplace.adobe.com/auctane-api.html
 
-### From Blue Acorn SOW
+## Scope Agreed to in Blue Acorn SOW
 
 [View Source - Blue Acorn SOW for App Builder including Shipstation Work](https://docs.google.com/document/d/1csPluOejPnCXAH52mUQL5AYoNUHlqvre/edit)
 
