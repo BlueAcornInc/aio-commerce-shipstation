@@ -25,5 +25,9 @@
   },
   "aio-app-builder-templates": [
     "@adobe/generator-app-api-mesh"
-  ]
+  ],
+  "author": {
+    "name": "Doug Hatcher <doug.hatcher@blueacornici.com> (https://blueacornici.com)"
+  },
+  "contributors": []
 }
