@@ -1,6 +1,6 @@
 # ShipStation for Adobe App Builder
 
-ShipStation App for Adobe Commerce! This will be a playground to dupe the shipping functionality from the checkout starter, and will eventually become the full shipstation app
+ShipStation App for Adobe Commerce! This will be a playground to dupe the shipping functionality from the checkout starter, and will eventually become the full shipstation app!
 
 ## ShipStation Getting Started
 
