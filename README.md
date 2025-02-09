@@ -94,6 +94,9 @@ We are still trying to figure this out, this is a set of questions we should sen
   * @adobe/generator-app-events-generic ?
   * @adobe/generator-app-api-mesh includes events and the mesh, builds correctly...
 * How do we submit an app for "approval"? Does not seem to be exposed, see no section for "Commerce" apps...
+* How do we set up AIO locally? Is there a way to configure the staging and production commerce connector keys as environment variables? 
+* Can you describe a typical development lifecycle? Do each developer create their own apps? 
+* Can we get a breakdown of thow these commerce apps are typically structured? We can demonstrate this repo to give our understanding so far...
 
 
 ## Setup

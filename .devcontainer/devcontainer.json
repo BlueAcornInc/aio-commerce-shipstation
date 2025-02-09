@@ -6,12 +6,10 @@
 		
 	"workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}",
 
-	// "postCreateCommand": "npm install",
-	// "postAttachCommand": "npm run storybook:ci",
+	"postCreateCommand": "npm install",
+	"postAttachCommand": "aio app run",
 	
-	"forwardPorts": [
-		6006, 8080
-	],
+	"forwardPorts": [],
 	"customizations": {
 		"vscode": {
 			"extensions": [
