@@ -1,5 +1,5 @@
 {
-	"name": "aio - payments",
+	"name": "ShipsStation Commerce App",
 
 	"dockerComposeFile": "docker-compose.yml",
 	"service": "app",
