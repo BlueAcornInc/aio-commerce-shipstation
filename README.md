@@ -53,7 +53,7 @@ We have a sandbox environment
 * ["Evergreen" in Bitbucket Deployments](https://bitbucket.org/blueacorn/showcase-evergreen-commerce/deployments)
 
 ### Evergreen - The Mock Enterprise Organization
-Evergreen is a mock enterprise-scalse organization, a persona of a business with the kinds of architectural needs we are trying to speak to. At current, Evergreen isn’t intended to be of the financial and resource scale  of a client we might want to attract, but one of our main project goals is to emulate ever sophisticated organizations. This will also help us in persuits like testing and honing new technologies we wish to introduce into the market, such as Adobe’s Real-time CDP where we need to learn the platform where we can successfully sell it. If we are able to mock an organization of significant scale, we could potentially service the data input needs of the CDP thus we’re both able to demonstrate this running at some scale, and perfect our implementation at the same time.
+Evergreen is a mock enterprise-scale organization, a persona of a business with the kinds of architectural needs we are trying to speak to. At current, Evergreen isn’t intended to be of the financial and resource scale  of a client we might want to attract, but one of our main project goals is to emulate ever sophisticated organizations. This will also help us in pursuits like testing and honing new technologies we wish to introduce into the market, such as Adobe’s Real-time CDP where we need to learn the platform where we can successfully sell it. If we are able to mock an organization of significant scale, we could potentially service the data input needs of the CDP thus we’re both able to demonstrate this running at some scale, and perfect our implementation at the same time.
 
 
 ### Environments
@@ -88,19 +88,19 @@ This project is also hosted in Github, where a Codespace can be used to potentia
 
 We are still trying to figure this out, this is a set of questions we should send to the OOPE Lead Architect at Adobe [Russ Johnson](mailto:rujohnso@adobe.com) who can help guide us.
 
-* So our current idea is to take the aio templates mentioned below, and we port the shipping method runtimes over, and the configuration yaml... how does this get applied to multiple storefronts?
-* there is an [app generation command](https://developer.adobe.com/commerce/extensibility/events/installation/#on-premise-installation) how does this work? If this needs to generate based on oope events and the connector data, seems a developer _would_ need to have this locally to perform the initial generation... seems complex, can they talk us through?
-* [link to subscribing events](https://developer.adobe.com/commerce/extensibility/events/commands/#subscribe-to-an-event) this shows me creating an io_events.yaml in commerce core to register events, or running `bin/magento event:subscribe` but surely we shouldn't have to make any change to commerce core. How is this managrd?* naming and title convetions for app builder app? 
+* Our current idea is to take the aio templates mentioned below, and we port the shipping method runtimes over, and the configuration yaml... how does this get applied to multiple storefronts?
+* There is an [app generation command](https://developer.adobe.com/commerce/extensibility/events/installation/#on-premise-installation) how does this work? If this needs to generate based on oope events and the connector data, seems a developer _would_ need to have this locally to perform the initial generation... seems complex, can they talk us through?
+* [link to subscribing events](https://developer.adobe.com/commerce/extensibility/events/commands/#subscribe-to-an-event) this shows me creating an io_events.yaml in commerce core to register events, or running `bin/magento event:subscribe` but surely we shouldn't have to make any change to commerce core. How is this managed?* naming and title conventions for app builder app? 
   * There's no camel-casing, spaces, underscores, dashes, etc etc...
 * best template for aio app builder app? We do not see any "Commerce" related capabilities exposed in app builder. Do we need to get an entitlement enabled for this?
   * @adobe/generator-app-events-generic ?
   * @adobe/generator-app-api-mesh includes events and the mesh, builds correctly...
 * How do we submit an app for "approval"? Does not seem to be exposed, see no section for "Commerce" apps...
 * How do we set up the commerce connector locally? Is there a way to configure the staging and production commerce connector keys as environment variables? 
-* Also seems like we do not have enough data spaces for local development, can you remark on how data spaces are geneerally done?
+* Also seems like we do not have enough data spaces for local development, can you remark on how data spaces are generally done?
 * I understand that a merchant will want a combination of app builder apps layered on top of each other to provide like payment methods and shippiung methods... but [this explaination](https://developer.adobe.com/commerce/extensibility/events/configure-commerce/) certainly makes it seem that it's one app builder app to one merchant instance. How do multiple app builder apps co-exist on one event bus? How is this configured?
 * Can you describe a typical development lifecycle? Do each developer create their own local commerce instances, or with the central app builder app can we all edit against like our staging sandbox? What is typical? 
-* Can we get a breakdown of thow these commerce apps are typically structured? We can demonstrate this repo to give our understanding so far...
+* Can we get a breakdown of how these commerce apps are typically structured? We can demonstrate this repo to give our understanding so far...
 
 
 
