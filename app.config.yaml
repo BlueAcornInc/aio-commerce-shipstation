@@ -14,3 +14,12 @@ application:
             annotations:
               require-adobe-auth: true
               final: true
+          shipstation-shipping:
+            function: src/api-mesh/actions/shipstation-shipping/index.js
+            web: 'yes'
+            runtime: nodejs:16
+            annotations:
+              require-adobe-auth: false
+            inputs:
+              SHIPSTATION_API_KEY: $SHIPSTATION_API_KEY
+              LOG_LEVEL: debug
