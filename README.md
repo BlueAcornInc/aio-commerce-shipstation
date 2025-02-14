@@ -41,6 +41,31 @@ These links were shared by Adobe as bit of a primer:
   * [Adobe - Out-of-process Payment Gateway Integrations](https://groupinfosysus.sharepoint.com/:b:/s/AppBuilderTeam/EXuOVZZp0ZhMoYOygzOgDO8B0GpGC-42f2fWMSIzrbQHWA?e=1Cghlr)
   * [Stripe - MVP Technical Specs](https://groupinfosysus.sharepoint.com/:b:/s/AppBuilderTeam/EXuOVZZp0ZhMoYOygzOgDO8B0GpGC-42f2fWMSIzrbQHWA?e=1Cghlr)
 
+## Technical Approach (From Adobe)
+
+Adobe provided the following guidance on how to proceed with this module. Let's review and try to implement the following:
+
+* call Ship Station API to calculate shipping charges during checkout
+  * OOP Shipping Method with new get_rates webhook
+  * https://developer.adobe.com/commerce/extensibility/starter-kit/checkout/use-cases/#shipping-methods
+  * https://developer.adobe.com/commerce/extensibility/starter-kit/checkout/shipping-reference/
+* export orders from Commerce to Ship Station for fulfillment
+  * event based backend integration
+  * https://developer.adobe.com/commerce/extensibility/starter-kit/integration/events/              
+* inventory levels synchronized between Commerce and Ship Station
+  * event based backend integration
+  * https://developer.adobe.com/commerce/extensibility/starter-kit/integration/stock/ 
+* tracking information from Ship Station sent to Commerce
+  * event based integration
+  * https://developer.adobe.com/commerce/extensibility/starter-kit/integration/shipments/
+* new feature: in the US Ship Station can provide rate options that customers can select during checkout For EDS Storefront, either:
+  * provide sample glue code to load your own UI component into EDS Storefront
+  * implement frontend component with EDS Drop-in SDK
+  * https://experienceleague.adobe.com/developer/commerce/storefront/dropins/all/introduction/
+* configuration in Admin
+  * React SPA as part of App Builder application and loaded into Commerce Admin
+  * SPA has API access to Commerce and App Builder
+  * https://developer.adobe.com/commerce/extensibility/admin-ui-sdk/
 
 ## Adobe Commerce Sandbox Environment
 
