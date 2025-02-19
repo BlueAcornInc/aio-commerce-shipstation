@@ -16,7 +16,7 @@ application:
               final: true
           shipstation-shipping:
             function: src/api-mesh/actions/shipstation-shipping/index.js
-            web: 'yes'
+            web: 'raw'
             runtime: nodejs:16
             annotations:
               require-adobe-auth: false

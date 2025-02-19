@@ -1,90 +1,90 @@
+/*
+Copyright 2025 Adobe. All rights reserved.
+This file is licensed to you under the Apache License,
+Version 2.0 (the "License"); you may not use this file
+except in compliance with the License. You may obtain
+a copy of the License at
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in
+writing, software distributed under the License is
+distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR REPRESENTATIONS OF ANY KIND,
+either express or implied. See the License for the
+specific language governing permissions and limitations
+under the License.
+*/
+
+const { Core } = require('@adobe/aio-sdk');
+const { webhookErrorResponse } = require('../../../../lib/adobe-commerce');
+const { HTTP_OK } = require('../../../../lib/http');
 const fetch = require('node-fetch');
 
 /**
- * Simple constant for HTTP success
+ * Creates a JSON Patch "add" operation
+ *
+ * @param {object} carrierData - The carrier data for the shipping operation
+ * @returns {object} The JSON Patch operation
  */
-const HTTP_OK = 200;
-
-/**
- * Returns a JSON Patch array containing one "error" shipping method.
- * In out-of-process shipping, returning a valid patch structure (even if it's "error")
- * avoids unexpected crashes in Magento.
- */
-function errorResponse(message, statusCode = 500) {
+function createShippingOperation(carrierData) {
     return {
-        statusCode,
-        body: JSON.stringify([
-            {
-                op: 'add',
-                path: 'result',
-                value: {
-                    carrier_code: 'error',
-                    method: 'error',
-                    method_title: 'Error',
-                    price: 0,
-                    cost: 0,
-                    additional_data: [
-                        {
-                            key: 'error',
-                            value: message
-                        }
-                    ]
-                }
-            }
-        ])
+        op: 'add',
+        path: 'result',
+        value: carrierData,
     };
 }
 
 /**
- * Main function to be called by Adobe Commerce out-of-process shipping webhook.
+ * Returns only real ShipStation rates. If ShipStation fails or returns
+ * nothing, returns a single “error” shipping method so Commerce won't
+ * complain about “must contain at least one operation.”
  *
- * Expects Commerce (or any client) to send a JSON payload with a "rateRequest" object
- * at the top level of params. Example:
+ * Skips signature verification.
  *
- * {
- *   "rateRequest": {
- *     "dest_country_id": "US",
- *     "dest_postcode": "78756",
- *     "dest_region_code": "TX",
- *     "dest_city": "Austin",
- *     "dest_street": "123 Warehouse Dr"
- *   }
- * }
+ * @param {object} params the input parameters
+ * @returns {Promise<object>} the response object
  */
-exports.main = async function main(params) {
+async function main(params) {
+    const logger = Core.Logger('shipping-methods', { level: params.LOG_LEVEL || 'info' });
+
     try {
-        // 1) Extract the "rateRequest" object from params
-        const { rateRequest } = params;
-        if (!rateRequest) {
-            return errorResponse('No rateRequest found in params.');
+        // 1) Parse the incoming request body (base64-encoded in params.__ow_body)
+        const payload = JSON.parse(atob(params.__ow_body || ''));
+        const { rateRequest: request } = payload || {};
+
+        if (!request) {
+            logger.error('Missing rateRequest in payload.');
+            return webhookErrorResponse('Missing rateRequest in payload.');
         }
 
-        // 2) Extract address fields (with defaults for demonstration)
+        // Extract address fields from rateRequest
         const {
             dest_country_id: destCountryId = 'US',
             dest_postcode: destPostcode = '12345',
-            dest_region_code = 'TX',
-            dest_city = 'Austin',
-            dest_street = '123 Warehouse Dr'
-        } = rateRequest;
+            dest_region_code: destRegionCode = 'TX',
+            dest_city: destCity = 'Austin',
+            dest_street: destStreet = '123 Warehouse Dr',
+        } = request;
 
-        // 3) Prepare ShipStation API key
+        logger.info('Received request:', request);
+
+        // 2) Call ShipStation to get real rates
         const shipstationApiKey = params.SHIPSTATION_API_KEY || process.env.SHIPSTATION_API_KEY;
         if (!shipstationApiKey) {
-            return errorResponse('Missing ShipStation API key.');
+            logger.warn('No SHIPSTATION_API_KEY found. Returning error method.');
+            return singleErrorMethod('Missing ShipStation API key.');
         }
 
-        // 4) Build minimal payload for ShipStation's /v2/rates
         const shipstationPayload = {
             shipment: {
                 ship_to: {
                     name: 'Magento Customer',
                     phone: '555-111-2222',
-                    address_line1: dest_street,
-                    city_locality: dest_city,
-                    state_province: dest_region_code,
+                    address_line1: destStreet,
+                    city_locality: destCity,
+                    state_province: destRegionCode,
                     postal_code: destPostcode,
-                    country_code: destCountryId
+                    country_code: destCountryId,
                 },
                 ship_from: {
                     name: 'My Warehouse',
@@ -93,92 +93,116 @@ exports.main = async function main(params) {
                     city_locality: 'Austin',
                     state_province: 'TX',
                     postal_code: '78756',
-                    country_code: 'US'
+                    country_code: 'US',
                 },
                 packages: [
                     {
                         weight: { value: 3, unit: 'pound' },
-                        dimensions: { length: 10, width: 6, height: 4, unit: 'inch' }
-                    }
-                ]
+                        dimensions: { length: 10, width: 6, height: 4, unit: 'inch' },
+                    },
+                ],
             },
             rate_options: {
-                // Example carrier ID(s) – must match what's configured in ShipStation
-                carrier_ids: ['se-1941419', 'se-1941420']
-            }
+                carrier_ids: ['se-1941419', 'se-1941420'],
+            },
         };
 
-        // 5) Call ShipStation
-        let shipstationResponse;
+        let rawRates = [];
         try {
-            shipstationResponse = await fetch('https://api.shipstation.com/v2/rates', {
+            const res = await fetch('https://api.shipstation.com/v2/rates', {
                 method: 'POST',
                 headers: {
                     'API-Key': shipstationApiKey,
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
                 },
-                body: JSON.stringify(shipstationPayload)
+                body: JSON.stringify(shipstationPayload),
             });
+
+            if (!res.ok) {
+                const errTxt = await res.text();
+                logger.error(`ShipStation call failed (HTTP ${res.status}): ${errTxt}`);
+            } else {
+                const data = await res.json();
+                logger.info('ShipStation response:', JSON.stringify(data));
+
+                if (Array.isArray(data.rates)) {
+                    rawRates = data.rates;
+                } else if (data.rate_response && Array.isArray(data.rate_response.rates)) {
+                    rawRates = data.rate_response.rates;
+                }
+            }
         } catch (err) {
-            return errorResponse(`Network error calling ShipStation: ${err.message}`, 502);
+            logger.error('Network error calling ShipStation:', err.message);
         }
 
-        if (!shipstationResponse.ok) {
-            const errorBody = await shipstationResponse.text();
-            return errorResponse(
-                `ShipStation API error [${shipstationResponse.status}]: ${errorBody}`,
-                shipstationResponse.status
-            );
-        }
-
-        // 6) Parse and extract ShipStation rates
-        let responseData;
-        try {
-            responseData = await shipstationResponse.json();
-        } catch (err) {
-            return errorResponse(`Error parsing ShipStation response: ${err.message}`);
-        }
-
-        let rawRates = [];
-        if (Array.isArray(responseData.rates)) {
-            rawRates = responseData.rates;
-        } else if (responseData.rate_response && Array.isArray(responseData.rate_response.rates)) {
-            rawRates = responseData.rate_response.rates;
-        }
-
-        // 7) Convert ShipStation rates to JSON Patch "add" operations for Magento
-        const operations = rawRates.map(rate => {
+        // 3) Convert ShipStation rates
+        const operations = [];
+        for (const rate of rawRates) {
             const cost = rate.shipping_amount?.amount ?? rate.shipment_cost ?? 0;
             const serviceName = rate.carrier_friendly_name || rate.carrier_id || 'Carrier';
             const methodCode = rate.service_type || rate.service_code || 'unknown';
-            const carrierId = rate.carrier_id;
 
-            return {
-                op: 'add',
-                path: 'result',
-                value: {
-                    carrier_code: carrierId,
+            operations.push(
+                createShippingOperation({
+                    carrier_code: 'ShipStation',
                     method: serviceName,
                     method_title: methodCode,
                     price: cost,
-                    cost: cost,
+                    cost,
                     additional_data: [
                         {
                             key: 'shipstation_service',
-                            value: serviceName
-                        }
-                    ]
-                }
-            };
-        });
+                            value: serviceName,
+                        },
+                    ],
+                })
+            );
+        }
 
-        // 8) Return the operations array
+        // If no valid rates were found, return an error shipping method
+        if (operations.length === 0) {
+            logger.warn('No ShipStation rates found; returning error shipping method.');
+            return singleErrorMethod('No ShipStation rates available.');
+        }
+
+        // Otherwise, return them
         return {
             statusCode: HTTP_OK,
-            body: JSON.stringify(operations)
+            body: JSON.stringify(operations),
         };
-    } catch (err) {
-        // In case of any unforeseen error, return an errorResponse
-        return errorResponse(`Server error: ${err.message}`);
+    } catch (error) {
+        logger.error('Server error:', error);
+        return singleErrorMethod(`Server error: ${error.message}`);
     }
-};
+}
+
+/**
+ * Returns a JSON Patch array with a single "error" shipping method
+ * to avoid “must contain at least one operation” errors in Magento.
+ */
+function singleErrorMethod(message) {
+    const op = {
+        op: 'add',
+        path: 'result',
+        value: {
+            carrier_code: 'ShipStation',
+            method: 'error',
+            method_title: 'ShipStation Not Available',
+            price: 0,
+            cost: 0,
+            additional_data: [
+                {
+                    key: 'error',
+                    value: message,
+                },
+            ],
+        },
+    };
+
+    return {
+        statusCode: 200,
+        body: JSON.stringify([op]),
+    };
+}
+
+exports.main = main;
