@@ -14,6 +14,7 @@ application:
             annotations:
               require-adobe-auth: true
               final: true
+
           shipstation-shipping:
             function: src/api-mesh/actions/shipstation-shipping/index.js
             web: 'raw'
@@ -22,4 +23,14 @@ application:
               require-adobe-auth: false
             inputs:
               SHIPSTATION_API_KEY: $SHIPSTATION_API_KEY
+              SHIPSTATION_CARRIER_IDS: $SHIPSTATION_CARRIER_IDS
+              SHIPSTATION_WAREHOUSE_NAME: $SHIPSTATION_WAREHOUSE_NAME
+              SHIPSTATION_WAREHOUSE_PHONE: $SHIPSTATION_WAREHOUSE_PHONE
+              SHIPSTATION_WAREHOUSE_ADDRESS_LINE1: $SHIPSTATION_WAREHOUSE_ADDRESS_LINE1
+              SHIPSTATION_WAREHOUSE_CITY: $SHIPSTATION_WAREHOUSE_CITY
+              SHIPSTATION_WAREHOUSE_REGION: $SHIPSTATION_WAREHOUSE_REGION
+              SHIPSTATION_WAREHOUSE_POSTCODE: $SHIPSTATION_WAREHOUSE_POSTCODE
+              SHIPSTATION_WAREHOUSE_COUNTRY: $SHIPSTATION_WAREHOUSE_COUNTRY
+              SHIPSTATION_SHIPTO_NAME: $SHIPSTATION_SHIPTO_NAME
+              SHIPSTATION_SHIPTO_PHONE: $SHIPSTATION_SHIPTO_PHONE
               LOG_LEVEL: debug
