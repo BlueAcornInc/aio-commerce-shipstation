@@ -4,33 +4,22 @@ application:
       aio-commerce-shipstation-app:
         license: Apache-2.0
         actions:
-          api-mesh-query-content:
-            function: src/api-mesh/actions/api-mesh-query-content/index.js
+          shipstation-config:
+            function: src/app/actions/shipstation-config/index.js
+            runtime: nodejs:22
             web: 'yes'
-            runtime: nodejs:16
-            inputs:
-              MESH_ID: $MESH_ID
-              LOG_LEVEL: debug
-            annotations:
-              require-adobe-auth: true
-              final: true
-
-          shipstation-shipping:
-            function: src/api-mesh/actions/shipstation-shipping/index.js
-            web: 'raw'
-            runtime: nodejs:16
             annotations:
               require-adobe-auth: false
-            inputs:
-              SHIPSTATION_API_KEY: $SHIPSTATION_API_KEY
-              SHIPSTATION_CARRIER_IDS: $SHIPSTATION_CARRIER_IDS
-              SHIPSTATION_WAREHOUSE_NAME: $SHIPSTATION_WAREHOUSE_NAME
-              SHIPSTATION_WAREHOUSE_PHONE: $SHIPSTATION_WAREHOUSE_PHONE
-              SHIPSTATION_WAREHOUSE_ADDRESS_LINE1: $SHIPSTATION_WAREHOUSE_ADDRESS_LINE1
-              SHIPSTATION_WAREHOUSE_CITY: $SHIPSTATION_WAREHOUSE_CITY
-              SHIPSTATION_WAREHOUSE_REGION: $SHIPSTATION_WAREHOUSE_REGION
-              SHIPSTATION_WAREHOUSE_POSTCODE: $SHIPSTATION_WAREHOUSE_POSTCODE
-              SHIPSTATION_WAREHOUSE_COUNTRY: $SHIPSTATION_WAREHOUSE_COUNTRY
-              SHIPSTATION_SHIPTO_NAME: $SHIPSTATION_SHIPTO_NAME
-              SHIPSTATION_SHIPTO_PHONE: $SHIPSTATION_SHIPTO_PHONE
-              LOG_LEVEL: debug
+          shipstation-shipping:
+            function: src/app/actions/shipstation-shipping/index.js
+            web: 'raw'
+            runtime: nodejs:22
+            annotations:
+              require-adobe-auth: false
+extensions:
+  commerce/backend-ui/1:
+    $include: src/commerce-backend-ui-1/ext.config.yaml
+operations:
+  view:
+    - type: web
+      impl: web
