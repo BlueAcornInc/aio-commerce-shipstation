@@ -37,7 +37,6 @@ async function main(configFilePath) {
             console.error(`Failed to create shipping carrier ${shippingCarrierCode}`);
             console.error(`Status code: ${response.statusCode}`);
             console.error(`Error message: ${response.message}`);
-            // Also log the body if it exists
             if (response.body) {
                 console.error(`Body: ${JSON.stringify(response.body, null, 2)}`);
             }        }

@@ -2,7 +2,7 @@
 * <license header>
 */
 
-const utils = require('./../src/api-mesh/actions/utils.js')
+const utils = require('../src/app/actions/utils.js')
 
 test('interface', () => {
   expect(typeof utils.errorResponse).toBe('function')

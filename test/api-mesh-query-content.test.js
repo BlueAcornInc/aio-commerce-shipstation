@@ -16,7 +16,7 @@ Core.Logger.mockReturnValue(mockLoggerInstance)
 const { GraphQLClient } = require('graphql-request')
 
 // eslint-disable-next-line node/no-missing-require
-const action = require('./../src/api-mesh/actions/api-mesh-query-content/index.js')
+const action = require('../src/app/actions/api-mesh-query-content/index.js')
 
 beforeEach(() => {
   Core.Logger.mockClear()
