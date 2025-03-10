@@ -103,10 +103,11 @@ index.html
 <head>
     <meta charset="utf-8" />
     <title>ShipStation Config Editor</title>
+    <link rel="stylesheet" href="/dist/styles.css" />
 </head>
 <body>
 <div id="root"></div>
-<script src="dist/bundle.js"></script>
+<script src="/dist/bundle.js"></script>
 </body>
 </html>
 styles.css
@@ -120,6 +121,8 @@ webpack.config.js
 // src/commerce-backend-ui-1/web-src/webpack.config.js
 const path = require('path');
 const webpack = require('webpack');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
 module.exports = {
     mode: 'production',
@@ -143,7 +146,10 @@ module.exports = {
             },
             {
                 test: /\.css$/,
-                use: ['style-loader', 'css-loader']
+                use: [
+                    MiniCssExtractPlugin.loader,
+                    'css-loader'
+                ]
             }
         ]
     },
@@ -153,6 +159,13 @@ module.exports = {
     plugins: [
         new webpack.DefinePlugin({
             'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV || 'development')
+        }),
+        new HtmlWebpackPlugin({
+            template: './index.html',
+            filename: 'index.html'
+        }),
+        new MiniCssExtractPlugin({
+            filename: 'styles.css'
         })
     ],
     devServer: {
@@ -202,9 +215,6 @@ package.json
     "css-loader": "^7.1.2",
     "html-webpack-plugin": "^5.6.3",
     "mini-css-extract-plugin": "^2.9.2",
-    "postcss": "^8.5.3",
-    "postcss-loader": "^8.1.1",
-    "postcss-preset-env": "^10.1.5",
     "react": "^18",
     "react-dom": "^18",
     "style-loader": "^4.0.0",
@@ -219,6 +229,7 @@ package.json
     "@react-spectrum/theme-default": "^3.5.16"
   }
 }
+
 App.jsx
 // src/commerce-backend-ui-1/web-src/App.jsx
 import React from 'react';

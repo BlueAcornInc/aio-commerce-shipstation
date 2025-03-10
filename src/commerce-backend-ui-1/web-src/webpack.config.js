@@ -1,6 +1,7 @@
 // src/commerce-backend-ui-1/web-src/webpack.config.js
 const path = require('path');
 const webpack = require('webpack');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
     mode: 'production',
@@ -34,7 +35,11 @@ module.exports = {
     plugins: [
         new webpack.DefinePlugin({
             'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV || 'development')
-        })
+        }),
+        new HtmlWebpackPlugin({
+            template: './index.html',
+            filename: 'index.html'
+        }),
     ],
     devServer: {
         static: {
