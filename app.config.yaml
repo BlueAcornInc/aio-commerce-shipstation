@@ -7,12 +7,12 @@ application:
           shipstation-config:
             function: src/app/actions/shipstation-config/index.js
             runtime: nodejs:22
-            web: 'yes'
+            web: "yes"
             annotations:
               require-adobe-auth: false
           shipstation-shipping:
             function: src/app/actions/shipstation-shipping/index.js
-            web: 'raw'
+            web: "raw"
             runtime: nodejs:22
             annotations:
               require-adobe-auth: false
