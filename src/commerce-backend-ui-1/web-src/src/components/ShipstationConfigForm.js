@@ -82,7 +82,6 @@ export default function ShipstationConfigForm({ actionUrl }) {
 
   return (
     <View padding="size-250">
-      <Heading level={1}>ShipStation Config Editor</Heading>
       <Content marginBottom="size-200">{statusMsg}</Content>
       <Form maxWidth="size-6000">
         <TextField
