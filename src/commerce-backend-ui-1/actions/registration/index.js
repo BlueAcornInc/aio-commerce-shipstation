@@ -1,38 +1,42 @@
-// src/commerce-backend-ui-1/actions/registration/index.js
-async function main(params) {
-  params;
-  const namespace = process.env.__OW_NAMESPACE || "default-namespace";
-  const baseUrl = `https://${namespace}.adobeio-static.net`;
-  const href = `${baseUrl}/index.html`;
-  return {
-    statusCode: 200,
-    body: {
-      registration: {
-        name: "shipstation-extension",
-        title: "ShipStation Extension",
-        description:
-          "ShipStation out-of-process shipping integration for Adobe Commerce",
-        icon: "none",
-        publisher: "PUBLISHER_ID",
-        status: "PUBLISHED",
+/*
+Copyright 2024 Adobe. All rights reserved.
+This file is licensed to you under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License. You may obtain a copy
+of the License at http://www.apache.org/licenses/LICENSE-2.0
 
-        endpoints: {
-          "commerce/backend-ui/1": {
-            view: [
-              {
-                href: href,
-              },
-            ],
-          },
-        },
+Unless required by applicable law or agreed to in writing, software distributed under
+the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS
+OF ANY KIND, either express or implied. See the License for the specific language
+governing permissions and limitations under the License.
+*/
 
-        xrInfo: {
-          supportEmail: "extensions@blueacorn.com",
-          appId: "APP_ID",
-        },
-      },
-    },
-  };
+async function main() {
+    const extensionId = 'ShipStation'
+
+    return {
+        statusCode: 200,
+        body: {
+            registration: {
+                menuItems: [
+                    {
+                        id: `${extensionId}::first`,
+                        title: 'Ship Station Configuration',
+                        parent: `${extensionId}::apps`,
+                        sortOrder: 1
+                    },
+                    {
+                        id: `${extensionId}::apps`,
+                        title: 'ShipStation',
+                        isSection: true,
+                        sortOrder: 100
+                    }
+                ],
+                page: {
+                    title: 'Ship Station Configuration'
+                }
+            }
+        }
+    }
 }
 
-exports.main = main;
+exports.main = main

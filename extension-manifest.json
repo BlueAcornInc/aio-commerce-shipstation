@@ -1,8 +1,8 @@
 {
-  "name": "my-shipstation-app",
-  "displayName": "ShipStation App for Commerce",
-  "description": "Provides OOP shipping integration and an Admin UI for config",
+  "name": "Ship Station",
+  "displayName": "Adobe Commerce Shipstation",
+  "description": "Adobe Commerce Shipstation build with App Builder",
   "platform": "web",
-  "id": "my-shipstation-app",
+  "id": "ShipStation",
   "version": "1.0.0"
 }

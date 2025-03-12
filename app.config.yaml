@@ -23,3 +23,8 @@ operations:
   view:
     - type: web
       impl: web
+web: 'yes'
+inputs:
+  LOG_LEVEL: debug
+annotations:
+  require-adobe-auth: false
