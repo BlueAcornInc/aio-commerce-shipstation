@@ -9,7 +9,8 @@ import {
   View,
 } from "@adobe/react-spectrum";
 
-export default function ShipstationConfigForm({ actionUrl }) {
+export default function ShipstationConfigForm() {
+  const ACTION_URL = 'https://35582-shipstationlocal-local.adobeio-static.net/api/v1/web/ShipStation/commerce-rest-get'
   const [apiKey, setApiKey] = useState("");
   const [carrierIds, setCarrierIds] = useState("");
   const [warehouseName, setWarehouseName] = useState("");
@@ -26,7 +27,7 @@ export default function ShipstationConfigForm({ actionUrl }) {
   useEffect(() => {
     async function loadConfig() {
       try {
-        const resp = await fetch(actionUrl);
+        const resp = await fetch(ACTION_URL);
         if (!resp.ok) throw new Error(`GET failed: HTTP ${resp.status}`);
         const data = await resp.json();
         console.log("Fetched config:", data); // Debug response
@@ -50,7 +51,7 @@ export default function ShipstationConfigForm({ actionUrl }) {
       }
     }
     loadConfig();
-  }, [actionUrl]);
+  }, [ACTION_URL]);
 
   async function handleSave() {
     const body = {
@@ -68,7 +69,7 @@ export default function ShipstationConfigForm({ actionUrl }) {
     };
 
     try {
-      const resp = await fetch(actionUrl, {
+      const resp = await fetch(ACTION_URL, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(body),
