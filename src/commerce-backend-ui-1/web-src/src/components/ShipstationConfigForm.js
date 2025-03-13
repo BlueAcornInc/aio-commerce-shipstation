@@ -1,17 +1,14 @@
-// src/commerce-backend-ui-1/web-src/ShipstationConfigForm.jsx
 import React, { useState, useEffect } from "react";
 import {
   Button,
   Form,
   TextField,
-  Heading,
   Content,
   View,
 } from "@adobe/react-spectrum";
 
-export default function ShipstationConfigForm() {
-  const ACTION_URL = 'https://35582-shipstationlocal-local.adobeio-static.net/api/v1/web/ShipStation/commerce-rest-get'
-  const [apiKey, setApiKey] = useState("");
+export default function ShipstationConfigForm({ actionUrl }) {
+    const [apiKey, setApiKey] = useState("");
   const [carrierIds, setCarrierIds] = useState("");
   const [warehouseName, setWarehouseName] = useState("");
   const [warehousePhone, setWarehousePhone] = useState("");
@@ -27,7 +24,7 @@ export default function ShipstationConfigForm() {
   useEffect(() => {
     async function loadConfig() {
       try {
-        const resp = await fetch(ACTION_URL);
+        const resp = await fetch(actionUrl);
         if (!resp.ok) throw new Error(`GET failed: HTTP ${resp.status}`);
         const data = await resp.json();
         console.log("Fetched config:", data); // Debug response
@@ -51,7 +48,8 @@ export default function ShipstationConfigForm() {
       }
     }
     loadConfig();
-  }, [ACTION_URL]);
+    console.log('repainted')
+  }, [actionUrl]);
 
   async function handleSave() {
     const body = {
@@ -67,9 +65,9 @@ export default function ShipstationConfigForm() {
       shipToName,
       shipToPhone,
     };
-
+console.log('body',body)
     try {
-      const resp = await fetch(ACTION_URL, {
+      const resp = await fetch(actionUrl, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(body),
