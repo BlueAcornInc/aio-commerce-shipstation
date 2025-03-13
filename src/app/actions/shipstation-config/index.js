@@ -67,15 +67,33 @@ async function main(params) {
     };
   } else if (params.__ow_method === "get") {
     const state = await stateLib.init();
-    const entry = await state.get("shipstationConfig");
+    let entry = await state.get("shipstationConfig");
+
+    // If state is empty, seed it with the default environment values
+    if (!entry) {
+      const defaultConfig = {
+        shipstationApiKey: params.SHIPSTATION_API_KEY,
+        shipstationCarrierIds: params.SHIPSTATION_CARRIER_IDS,
+        warehouseName: params.SHIPSTATION_WAREHOUSE_NAME,
+        warehousePhone: params.SHIPSTATION_WAREHOUSE_PHONE,
+        warehouseAddressLine1: params.SHIPSTATION_WAREHOUSE_ADDRESS_LINE1,
+        warehouseCityLocality: params.SHIPSTATION_WAREHOUSE_CITY,
+        warehouseStateProvince: params.SHIPSTATION_WAREHOUSE_REGION,
+        warehousePostalCode: params.SHIPSTATION_WAREHOUSE_POSTCODE,
+        warehouseCountryCode: params.SHIPSTATION_WAREHOUSE_COUNTRY,
+      };
+
+      await state.put("shipstationConfig", JSON.stringify(defaultConfig), {
+        ttl: MAX_TTL,
+      });
+      entry = { value: JSON.stringify(defaultConfig) };
+    }
+
     let loadedConfig = {};
-    if (entry && entry.value) {
-      try {
-        loadedConfig = JSON.parse(entry.value);
-      } catch (e) {
-        logger.warn("Failed to parse stored JSON", e);
-        loadedConfig = {};
-      }
+    try {
+      loadedConfig = JSON.parse(entry.value);
+    } catch (e) {
+      logger.warn("Failed to parse stored JSON", e);
     }
 
     return {
