@@ -4,12 +4,6 @@ application:
       aio-commerce-shipstation-app:
         license: Apache-2.0
         actions:
-          shipstation-config:
-            function: src/app/actions/shipstation-config/index.js
-            runtime: nodejs:22
-            web: "yes"
-            annotations:
-              require-adobe-auth: false
           shipstation-shipping:
             function: src/app/actions/shipstation-shipping/index.js
             web: "raw"

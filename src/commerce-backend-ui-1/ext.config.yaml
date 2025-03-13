@@ -18,6 +18,7 @@ runtimeManifest:
           annotations:
             require-adobe-auth: false
             final: true
+  # https://35582-shipstationlocal-local.adobeio-static.net/api/v1/web/ShipStation/commerce-rest-get
     ShipStation:
       license: Apache-2.0
       actions:
