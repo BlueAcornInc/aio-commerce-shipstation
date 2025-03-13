@@ -48,7 +48,6 @@ export default function ShipstationConfigForm({ actionUrl }) {
       }
     }
     loadConfig();
-    console.log('repainted')
   }, [actionUrl]);
 
   async function handleSave() {
@@ -65,7 +64,6 @@ export default function ShipstationConfigForm({ actionUrl }) {
       shipToName,
       shipToPhone,
     };
-console.log('body',body)
     try {
       const resp = await fetch(actionUrl, {
         method: "POST",
