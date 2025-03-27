@@ -32,7 +32,7 @@ You must have the following components installed or accessible in your developme
 
   ```  $bash
   nvm install 22 && nvm use
-    ```
+  ```
 
 - **Adobe I/O CLI**
 - Access to the **Adobe Developer Console** with an **App Builder license**
