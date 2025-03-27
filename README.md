@@ -61,13 +61,13 @@ composer require magento/module-out-of-process-payment-methods --with-dependenci
 
 Required for event handling (only for Adobe Commerce 2.4.4 or 2.4.5):
 
-``  $bash
+```  $bash
 composer update magento/commerce-eventing --with-dependencies
   ```
 
 To verify the version installed:
 
-``  $bash
+```  $bash
 composer show magento/commerce-eventing
   ```
 
