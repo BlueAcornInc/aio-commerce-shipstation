@@ -3,8 +3,7 @@ Copyright 2025 Adobe. All rights reserved.
 This file is licensed to you under the Apache License, Version 2.0.
 */
 const { Core } = require('@adobe/aio-sdk');
-const { webhookErrorResponse } = require('../../../../lib/adobe-commerce');
-const { HTTP_OK } = require('../../../../lib/http');
+const { HTTP_OK } = require('../../../lib/http');
 const fetch = require('node-fetch');
 
 /**
@@ -15,9 +14,64 @@ function createShippingOperation(carrierData) {
 }
 
 /**
- * Returns a single error shipping method
+ * Returns a single error shipping method with optional detailed debug info
  */
-function singleErrorMethod(message) {
+function singleErrorMethod(message, options = {}) {
+    const { error, apiKey, payload, httpStatus, responseText, debugMode } = options;
+
+    // Check if debugging is enabled (case-insensitive 'true')
+    const isDebuggingEnabled = String(debugMode).toLowerCase() === 'true';
+
+    if (isDebuggingEnabled) {
+        // Mask API key, showing only last 4 characters if provided
+        const maskedApiKey = apiKey ? `${'*'.repeat(Math.max(0, apiKey.length - 4))}${apiKey.slice(-4)}` : 'Not provided';
+
+        // Build detailed error message
+        let detailedMessage = message;
+        const additionalData = [{ key: 'error', value: message }];
+
+        if (error) {
+            detailedMessage += ` | Stack: ${error.stack || error.message}`;
+            additionalData.push({ key: 'stack_trace', value: error.stack || error.message });
+        }
+        if (apiKey) {
+            detailedMessage += ` | API Key: ${maskedApiKey}`;
+            additionalData.push({ key: 'api_key_used', value: maskedApiKey });
+        }
+        if (payload) {
+            detailedMessage += ` | Payload: ${JSON.stringify(payload)}`;
+            additionalData.push({ key: 'shipstation_payload', value: JSON.stringify(payload) });
+        }
+        if (httpStatus) {
+            detailedMessage += ` | HTTP Status: ${httpStatus}`;
+            additionalData.push({ key: 'http_status', value: String(httpStatus) });
+        }
+        if (responseText) {
+            detailedMessage += ` | Response: ${responseText}`;
+            additionalData.push({ key: 'api_response', value: responseText });
+        }
+
+        detailedMessage;
+        return {
+            statusCode: 200,
+            body: JSON.stringify([
+                {
+                    op: 'add',
+                    path: 'result',
+                    value: {
+                        carrier_code: 'ShipStation',
+                        method: 'error',
+                        method_title: `ShipStation Error: ${message}`,
+                        price: 0,
+                        cost: 0,
+                        additional_data: additionalData,
+                    },
+                },
+            ]),
+        };
+    }
+
+    // Default behavior when debugging is not enabled
     return {
         statusCode: 200,
         body: JSON.stringify([
@@ -69,15 +123,17 @@ function buildPackages(rateRequest, logger) {
  */
 async function main(params) {
     const logger = Core.Logger('shipping-methods', { level: params.LOG_LEVEL || 'info' });
+    const debugMode = params.SHIPSTATION_DEBUGGING || process.env.SHIPSTATION_DEBUGGING;
 
     try {
-
         logger.debug('Raw params:', params);
         logger.debug('Raw __ow_body:', params.__ow_body || '(none)');
 
+        // Check debugging mode early
+
         if (!params.__ow_body) {
             logger.error('No body received from Magento.');
-            return singleErrorMethod('No Payload Received');
+            return singleErrorMethod('No Payload Received', { debugMode });
         }
 
         let payload;
@@ -86,13 +142,13 @@ async function main(params) {
             logger.debug('Decoded payload:', payload);
         } catch (e) {
             logger.error('Failed to decode payload:', e.message);
-            return singleErrorMethod('Invalid Payload Format');
+            return singleErrorMethod('Invalid Payload Format', { error: e, debugMode });
         }
 
         const { rateRequest: request } = payload || {};
         if (!request) {
             logger.error('Missing rateRequest in payload:', payload);
-            return singleErrorMethod('Missing Rate Request');
+            return singleErrorMethod('Missing Rate Request', { debugMode });
         }
 
         logger.info('Parsed rateRequest:', request);
@@ -113,7 +169,7 @@ async function main(params) {
             !destStreet
         ) {
             logger.error('One or more required address fields are missing in the rateRequest.');
-            return singleErrorMethod('Missing required shipping address fields');
+            return singleErrorMethod('Missing required shipping address fields', { debugMode });
         }
 
         // Build packages
@@ -124,15 +180,14 @@ async function main(params) {
         const shipstationApiKey = params.SHIPSTATION_API_KEY || process.env.SHIPSTATION_API_KEY;
         if (!shipstationApiKey) {
             logger.error('Missing SHIPSTATION_API_KEY.');
-            return singleErrorMethod('Missing API Key');
+            return singleErrorMethod('Missing API Key', { debugMode });
         }
 
         let carrierIds = params.SHIPSTATION_CARRIER_IDS || process.env.SHIPSTATION_CARRIER_IDS;
         if (!carrierIds) {
             logger.error('Missing SHIPSTATION_CARRIER_IDS.');
-            return singleErrorMethod('Missing Carrier IDs');
+            return singleErrorMethod('Missing Carrier IDs', { debugMode });
         }
-
         carrierIds = carrierIds.split(',').map(id => id.trim());
 
         const warehouseName = params.SHIPSTATION_WAREHOUSE_NAME || process.env.SHIPSTATION_WAREHOUSE_NAME;
@@ -153,7 +208,7 @@ async function main(params) {
             !warehouseCountryCode
         ) {
             logger.error('One or more required warehouse fields are missing in env or params.');
-            return singleErrorMethod('Missing required warehouse fields');
+            return singleErrorMethod('Missing required warehouse fields', { debugMode });
         }
 
         const shipToName = params.SHIPSTATION_SHIPTO_NAME || process.env.SHIPSTATION_SHIPTO_NAME;
@@ -204,7 +259,13 @@ async function main(params) {
             if (!res.ok) {
                 const errTxt = await res.text();
                 logger.error(`ShipStation failed (HTTP ${res.status}): ${errTxt}`);
-                return singleErrorMethod('ShipStation API Error');
+                return singleErrorMethod('ShipStation API Error', {
+                    apiKey: shipstationApiKey,
+                    payload: shipstationPayload,
+                    httpStatus: res.status,
+                    responseText: errTxt,
+                    debugMode,
+                });
             }
 
             const data = await res.json();
@@ -212,7 +273,12 @@ async function main(params) {
             rawRates = data.rates || data.rate_response?.rates || [];
         } catch (err) {
             logger.error('Network error calling ShipStation:', err.message);
-            return singleErrorMethod('ShipStation Network Error');
+            return singleErrorMethod('ShipStation Network Error', {
+                error: err,
+                apiKey: shipstationApiKey,
+                payload: shipstationPayload,
+                debugMode,
+            });
         }
 
         /**
@@ -248,7 +314,7 @@ async function main(params) {
 
         if (operations.length === 0) {
             logger.warn('No ShipStation rates found.');
-            return singleErrorMethod('No Rates Available');
+            return singleErrorMethod('No Rates Available', { apiKey: shipstationApiKey, payload: shipstationPayload, debugMode });
         }
 
         return {
@@ -257,7 +323,7 @@ async function main(params) {
         };
     } catch (error) {
         logger.error('Unexpected error:', error);
-        return singleErrorMethod('Server Error');
+        return singleErrorMethod('Server Error', { error, debugMode });
     }
 }
 

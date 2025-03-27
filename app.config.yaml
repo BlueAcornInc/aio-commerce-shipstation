@@ -4,24 +4,14 @@ application:
       aio-commerce-shipstation-app:
         license: Apache-2.0
         actions:
-          api-mesh-query-content:
-            function: src/api-mesh/actions/api-mesh-query-content/index.js
-            web: 'yes'
-            runtime: nodejs:16
-            inputs:
-              MESH_ID: $MESH_ID
-              LOG_LEVEL: debug
-            annotations:
-              require-adobe-auth: true
-              final: true
-
           shipstation-shipping:
-            function: src/api-mesh/actions/shipstation-shipping/index.js
-            web: 'raw'
+            function: src/actions/shipstation-shipping/index.js
+            web: raw
             runtime: nodejs:16
             annotations:
               require-adobe-auth: false
             inputs:
+              LOG_LEVEL: $LOG_LEVEL
               SHIPSTATION_API_KEY: $SHIPSTATION_API_KEY
               SHIPSTATION_CARRIER_IDS: $SHIPSTATION_CARRIER_IDS
               SHIPSTATION_WAREHOUSE_NAME: $SHIPSTATION_WAREHOUSE_NAME
@@ -33,4 +23,76 @@ application:
               SHIPSTATION_WAREHOUSE_COUNTRY: $SHIPSTATION_WAREHOUSE_COUNTRY
               SHIPSTATION_SHIPTO_NAME: $SHIPSTATION_SHIPTO_NAME
               SHIPSTATION_SHIPTO_PHONE: $SHIPSTATION_SHIPTO_PHONE
-              LOG_LEVEL: debug
+              SHIPSTATION_DEBUGGING: $SHIPSTATION_DEBUGGING
+
+configSchema:
+  title: 'ShipStation Shipping Integration'
+  description: 'Configure your ShipStation integration for Adobe Commerce shipping rates.'
+  properties:
+    - title: 'ShipStation API Key'
+      type: 'string'
+      description: 'Your ShipStation API Key (get it from shipstation.com).'
+      secret: true
+      envKey: 'SHIPSTATION_API_KEY'
+    - title: 'Carrier IDs'
+      type: 'string'
+      description: 'Comma-separated list of ShipStation carrier IDs (e.g., ups, fedex).'
+      envKey: 'SHIPSTATION_CARRIER_IDS'
+    - title: 'Warehouse Name'
+      type: 'string'
+      description: 'Name of your warehouse.'
+      envKey: 'SHIPSTATION_WAREHOUSE_NAME'
+    - title: 'Warehouse Phone'
+      type: 'string'
+      description: 'Phone number of your warehouse.'
+      envKey: 'SHIPSTATION_WAREHOUSE_PHONE'
+    - title: 'Warehouse Address Line 1'
+      type: 'string'
+      description: 'Street address of your warehouse.'
+      envKey: 'SHIPSTATION_WAREHOUSE_ADDRESS_LINE1'
+    - title: 'Warehouse City'
+      type: 'string'
+      description: 'City where your warehouse is located.'
+      envKey: 'SHIPSTATION_WAREHOUSE_CITY'
+    - title: 'Warehouse Region/State'
+      type: 'string'
+      description: 'State or region of your warehouse (e.g., CA).'
+      envKey: 'SHIPSTATION_WAREHOUSE_REGION'
+    - title: 'Warehouse Postal Code'
+      type: 'string'
+      description: 'Postal code of your warehouse.'
+      envKey: 'SHIPSTATION_WAREHOUSE_POSTCODE'
+    - title: 'Warehouse Country'
+      type: 'string'
+      description: 'Country code of your warehouse (e.g., US).'
+      envKey: 'SHIPSTATION_WAREHOUSE_COUNTRY'
+    - title: 'Ship-To Name'
+      type: 'string'
+      description: 'Default name for shipping destination (optional).'
+      envKey: 'SHIPSTATION_SHIPTO_NAME'
+      default: ''
+    - title: 'Ship-To Phone'
+      type: 'string'
+      description: 'Default phone for shipping destination (optional).'
+      envKey: 'SHIPSTATION_SHIPTO_PHONE'
+      default: ''
+    - title: 'Enable Debugging'
+      type: 'string'
+      description: 'Enable detailed error logging for debugging.'
+      envKey: 'SHIPSTATION_DEBUGGING'
+      default: "false"
+    - title: 'Log Level'
+      type: 'string'
+      description: 'Logging level for the app.'
+      enum:
+        - debug
+        - info
+        - warn
+        - error
+      envKey: 'LOG_LEVEL'
+      default: 'info'
+
+productDependencies:
+  - code: 'COMMC'
+    minVersion: '0.0.0'
+    maxVersion: '999.999.999'

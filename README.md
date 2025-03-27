@@ -1,209 +1,233 @@
-# ShipStation for Adobe App Builder
+# Adobe Commerce Out-of-Process ShipStation Shipping Method
 
-ShipStation App for Adobe Commerce! This will be a playground to dupe the shipping functionality from the checkout starter, and will eventually become the full shipstation app!
+Welcome to the ShipStation Shipping Method for Adobe Commerce using Adobe Developer App Builder.  
+This project implements an **Out-of-Process Shipping Method** for Adobe Commerce, integrating with the ShipStation API to provide real-time shipping rates. It is built on the official [Adobe Commerce Checkout Starter Kit](https://github.com/adobe/commerce-checkout-starter-kit) and extends it with a production-ready ShipStation integration.
 
-## ShipStation Getting Started
+## References
 
-* [This Project in Adobe App Builder Developer Console](https://developer.adobe.com/console/projects/35582/4566206088345338585/overview)
-* [ShipStation API docs](https://docs.shipstation.com)
-* [Adobe's Intital Sizing Doc with Reqs](https://groupinfosysus.sharepoint.com/:w:/s/AppBuilderTeam/EUx3Q61jBe5EoFmPFISPj3kBw5bZ9KG4G6n_4lN6NYJTOg?e=DHyJdX)
+- [Adobe Developer Console documentation](https://developer.adobe.com/developer-console/docs/guides/)
+- [App Builder documentation](https://developer.adobe.com/app-builder/docs/overview)
+- [Adobe I/O Runtime documentation](https://developer.adobe.com/runtime/docs)
+- [Adobe I/O Events documentation](https://developer.adobe.com/events/docs)
+- [Adobe Commerce extensibility documentation](https://developer.adobe.com/commerce/extensibility)
 
+## How to Use This Repository
 
-## Initial Scope Shared by Adobe
-
->  Integrate to shipstation shipping extension
-https://commercemarketplace.adobe.com/auctane-api.html
-
-## Scope Agreed to in Blue Acorn SOW
-
-[View Source - Blue Acorn SOW for App Builder including Shipstation Work](https://docs.google.com/document/d/1csPluOejPnCXAH52mUQL5AYoNUHlqvre/edit)
-
-Shipstation Module will integrate with Adobe Commerce, leveraging out-of-process extensibility techniques to introduce ShipStation shipping details into the native buyer experience. No ShipStation customizations (in-depth styling or customizations) in MVP implementation. 
-
-* Base functionality for MVP, targeted in this SOW includes:
-  * Core ShipStation integration to enable basic order fulfillment
-* Base functionality will not include:
-  * Shipment tracking label generation
-  * The system can connect with the ShipStation platform and sync orders from Adobe Commerce
+- See [DEVELOPMENT.md](DEVELOPMENT.md) for prerequisites and instructions on setting up and running the project locally.
+- See [CICD.md](CICD.md) for details on the CI/CD setup.
+- See [EDS.md](EDS.md) for information about integrating with an Edge Delivery Service (EDS) Storefront.
 
 ## Getting Started
 
-These links were shared by Adobe as bit of a primer: 
+To begin using the Adobe Commerce ShipStation Shipping Method, ensure your Adobe Commerce environment meets the prerequisites below and follow the installation and configuration steps.
 
-* [Introduction to App Builder](https://experienceleague.adobe.com/en/docs/commerce-learn/tutorials/adobe-developer-app-builder/introduction-to-app-builder)
-* [Getting access to App Builder](https://developer.adobe.com/app-builder/docs/overview/getting_access/)
-* [Back office starter kit](https://developer.adobe.com/commerce/extensibility/starter-kit/)
-* [Installing the starter kit](https://developer.adobe.com/commerce/extensibility/starter-kit/create-integration/)
-* [Checkout starter kit](https://github.com/adobe/commerce-checkout-starter-kit)
-* Internal Knowledge: 
-  * [#BLU-app-builder in Teams](https://teams.microsoft.com/l/channel/19%3A051oCCDZb2Yxa56RPVMxlMw36Pu5vjqmYNXI2yotRf01%40thread.tacv2/BLU-app-builder?groupId=ac33e213-3109-42cc-8cc7-67767dbe2433)
-  * [Adobe - Checkout Session vs Client Side Nonce](https://groupinfosysus.sharepoint.com/:b:/s/AppBuilderTeam/EcRLFdELp-xIreVnol2hQK0Be7txJQZ3wJTONYH64WiLQQ?e=gXJeBe)
-  * [Adobe - Out-of-process Payment Gateway Integrations](https://groupinfosysus.sharepoint.com/:b:/s/AppBuilderTeam/EXuOVZZp0ZhMoYOygzOgDO8B0GpGC-42f2fWMSIzrbQHWA?e=1Cghlr)
-  * [Stripe - MVP Technical Specs](https://groupinfosysus.sharepoint.com/:b:/s/AppBuilderTeam/EXuOVZZp0ZhMoYOygzOgDO8B0GpGC-42f2fWMSIzrbQHWA?e=1Cghlr)
+## Prerequisites
 
-## Technical Approach (From Adobe)
+You must have the following components installed or accessible in your development environment:
 
-Adobe provided the following guidance on how to proceed with this module. Let's review and try to implement the following:
+- **Adobe Commerce** version `2.4.4` or higher
+- **Node.js** version `22`
 
-* call Ship Station API to calculate shipping charges during checkout
-  * OOP Shipping Method with new get_rates webhook
-  * https://developer.adobe.com/commerce/extensibility/starter-kit/checkout/use-cases/#shipping-methods
-  * https://developer.adobe.com/commerce/extensibility/starter-kit/checkout/shipping-reference/
-* export orders from Commerce to Ship Station for fulfillment
-  * event based backend integration
-  * https://developer.adobe.com/commerce/extensibility/starter-kit/integration/events/              
-* inventory levels synchronized between Commerce and Ship Station
-  * event based backend integration
-  * https://developer.adobe.com/commerce/extensibility/starter-kit/integration/stock/ 
-* tracking information from Ship Station sent to Commerce
-  * event based integration
-  * https://developer.adobe.com/commerce/extensibility/starter-kit/integration/shipments/
-* new feature: in the US Ship Station can provide rate options that customers can select during checkout For EDS Storefront, either:
-  * provide sample glue code to load your own UI component into EDS Storefront
-  * implement frontend component with EDS Drop-in SDK
-  * https://experienceleague.adobe.com/developer/commerce/storefront/dropins/all/introduction/
-* configuration in Admin
-  * React SPA as part of App Builder application and loaded into Commerce Admin
-  * SPA has API access to Commerce and App Builder
-  * https://developer.adobe.com/commerce/extensibility/admin-ui-sdk/
+  If you are using [Node Version Manager (nvm)](https://github.com/nvm-sh/nvm), run:
 
-## Adobe Commerce Sandbox Environment
+  ```  $bash
+  nvm install 22 && nvm use
+    ```
 
-We have a sandbox environment 
+- **Adobe I/O CLI**
+- Access to the **Adobe Developer Console** with an **App Builder license**
 
-* ["Evergreen" Adobe Commerce Sandbox Github Repo
-](https://github.com/BlueAcornInc/showcase-evergreen-commerce)
-* ["Evergreen" staging environment in Adobe Commerce Cloud](https://console.adobecommerce.com/acadminblu67f4/tupar6lous4x4/staging)
-* ["Evergreen" LIVE staging instance](https://stage-sandbox.m2cloud.blueacorn.net)
-* ["Evergreen" in Bitbucket Deployments](https://bitbucket.org/blueacorn/showcase-evergreen-commerce/deployments)
+  If you don’t have access, refer to the official guide to [get access to App Builder](https://developer.adobe.com/app-builder/docs/overview/getting-access/).
 
-### Evergreen - The Mock Enterprise Organization
-Evergreen is a mock enterprise-scale organization, a persona of a business with the kinds of architectural needs we are trying to speak to. At current, Evergreen isn’t intended to be of the financial and resource scale  of a client we might want to attract, but one of our main project goals is to emulate ever sophisticated organizations. This will also help us in pursuits like testing and honing new technologies we wish to introduce into the market, such as Adobe’s Real-time CDP where we need to learn the platform where we can successfully sell it. If we are able to mock an organization of significant scale, we could potentially service the data input needs of the CDP thus we’re both able to demonstrate this running at some scale, and perfect our implementation at the same time.
+## Required Magento Modules
 
+Ensure your Adobe Commerce instance has the following modules installed:
 
-### Environments
+### Out-of-Process Shipping Extensions (OOPE)
 
-Evergreen is hosted in the [Blue Acorn iCi Pro Sandbox](https://console.adobecommerce.com/acadminblu67f4/tupar6lous4x4) Adobe Commerce Cloud project. We use the staging environment of this project as the live demo for our showcase, where the unstable development environment we do some testing to not disrupt staging.
+This enables support for out-of-process shipping methods.
 
-***NOTE*** that the current CI/CD is sourced from the [Bitbucket Repo](https://bitbucket.org/blueacorn/showcase-evergreen-commerce/deployments), and the Github repo is a fork at this point. 
+```  $bash
+composer require magento/module-out-of-process-shipping-methods --with-dependencies
+ ```
 
-| Environment | Bitbucket Branch | Cloud Branch | Console  | Frontend | Admin |
-|-------------|------------------|--------------|---------|----------|-------|
-| **Staging**  | `main`           | `staging`    | [Console](https://console.adobecommerce.com/acadminblu67f4/tupar6lous4x4/staging) | [Frontend](https://stage-sandbox.m2cloud.blueacorn.net) | [Admin](https://stage-sandbox.m2cloud.blueacorn.net/index.php/admin_baici/) |
-| **Unstable**    | `unstable`       | `unstable`   | [Console](https://console.adobecommerce.com/acadminblu67f4/tupar6lous4x4/unstable) | [Frontend](http://unstable-s7xr52a-tupar6lous4x4.us-4.magentosite.cloud) | [Admin](https://unstable-s7xr52a-tupar6lous4x4.us-4.magentosite.cloud/admin_baici/admin/) |
+### Out-of-Process Payment Extensions (Optional, for payment methods)
 
-## Adobe App Builder Entitltements within the Admin Console
+```  $bash
+composer require magento/module-out-of-process-payment-methods --with-dependencies
+  ```
 
-Access to App Builder is metered through the Adobe Admin Console where our organization handles the various Adobe product entitlements, such as AEMaaCS and Adobe Commerce Cloud. Users must exist in the `default` group to get access. 
+### Commerce Eventing Module
 
-* [App Builder Developer Console](https://developer.adobe.com)
-* Adding Users:
-  * [Developers section of Adobe I/O Runtime User is Admin Console](https://adminconsole.adobe.com/86FF829657DCB10D7F000101@AdobeOrg/users/developers)
-  * [Adobe I/O Runtime Users in Admin Console](https://adminconsole.adobe.com/86FF829657DCB10D7F000101@AdobeOrg/products/329E0E40B8550C6DF52A/profiles/195671759/admins)
-  * [Adobe Experience Plartform in Admin Console](https://adminconsole.adobe.com/86FF829657DCB10D7F000101@AdobeOrg/products/725EBBA0ED249E7DD6DA/users)
+Required for event handling (only for Adobe Commerce 2.4.4 or 2.4.5):
 
-## Github Codespaces, .devcontainer and vscode
+``  $bash
+composer update magento/commerce-eventing --with-dependencies
+  ```
 
-This project has a .devcontainer directory which contains a composition capable of running `aio` as well as a cors-anywhere proxy that can be used to get around https issues. To get started with VS Code and devcontainers, install the Remote - Containers extension, open your project in VS Code, and select "Reopen in Container" from the Command Palette. For more details, visit [Developing inside a Container](https://code.visualstudio.com/docs/devcontainers/containers). 
+To verify the version installed:
 
-This project is also hosted in Github, where a Codespace can be used to potentially run this project. This environment is provided as-is, and developers to this project are free to leverage their own stacks. 
+``  $bash
+composer show magento/commerce-eventing
+  ```
 
+For manual installation of the Adobe I/O Events module, refer to: [Adobe I/O Events Installation](https://developer.adobe.com/app-builder/docs/guides/events/overview/).
 
-## Open Questions
+## Installation & Configuration
 
-We are still trying to figure this out, this is a set of questions we should send to the OOPE Lead Architect at Adobe [Russ Johnson](mailto:rujohnso@adobe.com) who can help guide us.
+Follow these steps to set up your local project and deploy the app:
 
-* Our current idea is to take the aio templates mentioned below, and we port the shipping method runtimes over, and the configuration yaml... how does this get applied to multiple storefronts?
-* There is an [app generation command](https://developer.adobe.com/commerce/extensibility/events/installation/#on-premise-installation) how does this work? If this needs to generate based on oope events and the connector data, seems a developer _would_ need to have this locally to perform the initial generation... seems complex, can they talk us through?
-* [link to subscribing events](https://developer.adobe.com/commerce/extensibility/events/commands/#subscribe-to-an-event) this shows me creating an io_events.yaml in commerce core to register events, or running `bin/magento event:subscribe` but surely we shouldn't have to make any change to commerce core. How is this managed?* naming and title conventions for app builder app? 
-  * There's no camel-casing, spaces, underscores, dashes, etc etc...
-* best template for aio app builder app? We do not see any "Commerce" related capabilities exposed in app builder. Do we need to get an entitlement enabled for this?
-  * @adobe/generator-app-events-generic ?
-  * @adobe/generator-app-api-mesh includes events and the mesh, builds correctly...
-* How do we submit an app for "approval"? Does not seem to be exposed, see no section for "Commerce" apps...
-* How do we set up the commerce connector locally? Is there a way to configure the staging and production commerce connector keys as environment variables? 
-* Also seems like we do not have enough data spaces for local development, can you remark on how data spaces are generally done?
-* I understand that a merchant will want a combination of app builder apps layered on top of each other to provide like payment methods and shippiung methods... but [this explaination](https://developer.adobe.com/commerce/extensibility/events/configure-commerce/) certainly makes it seem that it's one app builder app to one merchant instance. How do multiple app builder apps co-exist on one event bus? How is this configured?
-* Can you describe a typical development lifecycle? Do each developer create their own local commerce instances, or with the central app builder app can we all edit against like our staging sandbox? What is typical? 
-* Can we get a breakdown of how these commerce apps are typically structured? We can demonstrate this repo to give our understanding so far...
+1. **Create a folder for your project and navigate to it:**
 
+   ```  $bash
+   mkdir aio-commerce-shipstation && cd aio-commerce-shipstation
+     ```
 
+2. **Initialize the App Builder project:**
 
+   ```  $bash
+   aio app init --repo adobe/commerce-checkout-starter-kit --github-pat $GITHUB_PAT
+     ```
 
-## Setup
+   > Replace `$GITHUB_PAT` with your GitHub personal access token. For more information, see [Managing Your Personal Access Tokens](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token).
 
-- Populate the `.env` file in the project root and fill it as shown [below](#env)
+3. **Add required Adobe I/O services:**
 
-## Local Dev
+   ```  $bash
+   aio app add service
+     ```
 
-- `aio app run` to start your local Dev server
-- App will run on `localhost:9080` by default
+   Select the following services when prompted:
 
-By default the UI will be served locally but actions will be deployed and served from Adobe I/O Runtime. To start a
-local serverless stack and also run your actions locally use the `aio app run --local` option.
+   - I/O Management API
+   - I/O Events
+   - Adobe I/O Events for Adobe Commerce
 
-## Test & Coverage
+4. **Set up environment variables:**
 
-- Run `aio app test` to run unit tests for ui and actions
-- Run `aio app test --e2e` to run e2e tests
+   Copy `env.dist` to `.env` and fill in the required values:
 
-## Deploy & Cleanup
+   ```  $bash
+   cp env.dist .env
+     ```
 
-- `aio app deploy` to build and deploy all actions on Runtime and static files to CDN
-- `aio app undeploy` to undeploy the app
+   Add the following environment variables to your `.env` file:
 
-## Config
+   ```  $bash
+   # Adobe Commerce OAuth Configuration (replace with your own credentials)
+   COMMERCE_BASE_URL=https://your-commerce-base-url
+   OAUTH_CLIENT_ID=your-oauth-client-id
+   OAUTH_CLIENT_SECRETS=["your-oauth-client-secret"]
+   OAUTH_TECHNICAL_ACCOUNT_ID=your-technical-account-id@techacct.adobe.com
+   OAUTH_TECHNICAL_ACCOUNT_EMAIL=your-technical-account-email@techacct.adobe.com
+   OAUTH_SCOPES=["AdobeID, openid, read_organizations, additional_info.projectedProductContext, additional_info.roles, adobeio_api, read_client_secret, manage_client_secrets, event_receiver_api"]
+   OAUTH_IMS_ORG_ID=your-ims-org-id@AdobeOrg
 
-### `.env`
+   # ShipStation API credentials
+   SHIPSTATION_API_KEY=your-shipstation-api-key
+   SHIPSTATION_CARRIER_IDS=carrier-id-1,carrier-id-2
 
-You can generate this file using the command `aio app use`. 
+   # Warehouse (ship_from) data
+   SHIPSTATION_WAREHOUSE_NAME=Your Warehouse Name
+   SHIPSTATION_WAREHOUSE_PHONE=999-999-9999
+   SHIPSTATION_WAREHOUSE_ADDRESS_LINE1=123 Warehouse St
+   SHIPSTATION_WAREHOUSE_CITY=Your City
+   SHIPSTATION_WAREHOUSE_REGION=ST
+   SHIPSTATION_WAREHOUSE_POSTCODE=12345
+   SHIPSTATION_WAREHOUSE_COUNTRY=US
 
-```bash
-# This file must **not** be committed to source control
+   # Ship-to default data (optional)
+   SHIPSTATION_SHIPTO_NAME=Default Customer Name
+   SHIPSTATION_SHIPTO_PHONE=888-888-8888
 
-## please provide your Adobe I/O Runtime credentials
-# AIO_RUNTIME_AUTH=
-# AIO_RUNTIME_NAMESPACE=
-```
+   # Enable debugging (optional)
+   SHIPSTATION_DEBUGGING=true
+     ```
 
-### `app.config.yaml`
+   ### Environment Variable Details
 
-- Main configuration file that defines an application's implementation. 
-- More information on this file, application configuration, and extension configuration 
-  can be found [here](https://developer.adobe.com/app-builder/docs/guides/appbuilder-configuration/#appconfigyaml)
+    - **Adobe Commerce OAuth Variables**: Obtain these from your Adobe Developer Console project for authenticating with Adobe Commerce.
+    - **`SHIPSTATION_API_KEY`**: Your ShipStation API key, available from your ShipStation account.
+    - **`SHIPSTATION_CARRIER_IDS`**: Comma-separated list of carrier IDs (e.g., `se-2196880`) from ShipStation that you want to use for shipping rates.
+    - **Warehouse Fields**: Define the "ship from" address (e.g., your store’s warehouse). Replace with your actual warehouse details.
+    - **Ship-to Fields**: Optional default values for the "ship to" name and phone. These can be overridden by customer data during checkout.
+    - **`SHIPSTATION_DEBUGGING`**: Set to `true` to enable detailed error logging for troubleshooting.
 
-#### Action Dependencies
+5. **Deploy the app:**
 
-- You have two options to resolve your actions' dependencies:
+   Deploy your app to Adobe I/O Runtime using:
 
-  1. **Packaged action file**: Add your action's dependencies to the root
-   `package.json` and install them using `npm install`. Then set the `function`
-   field in `app.config.yaml` to point to the **entry file** of your action
-   folder. We will use `webpack` to package your code and dependencies into a
-   single minified js file. The action will then be deployed as a single file.
-   Use this method if you want to reduce the size of your actions.
+   ```  $bash
+   aio app deploy
+     ```
 
-  2. **Zipped action folder**: In the folder containing the action code add a
-     `package.json` with the action's dependencies. Then set the `function`
-     field in `app.config.yaml` to point to the **folder** of that action. We will
-     install the required dependencies within that directory and zip the folder
-     before deploying it as a zipped action. Use this method if you want to keep
-     your action's dependencies separated.
+   After deployment, note the URL of your deployed app (e.g., `https://your-namespace-your-app-name.adobeioruntime.net/api/v1/web/your-action`). You’ll need this for the webhook configuration.
 
-## Debugging in VS Code
+## Configure Adobe Commerce
 
-While running your local server (`aio app run`), both UI and actions can be debugged, to do so open the vscode debugger
-and select the debugging configuration called `WebAndActions`.
-Alternatively, there are also debug configs for only UI and each separate action.
+After deploying your app, configure Adobe Commerce to use the ShipStation shipping method.
 
-## Typescript support for UI
+### Create Shipping Carriers
 
-To use typescript use `.tsx` extension for react components and add a `tsconfig.json` 
-and make sure you have the below config added
-```
- {
-  "compilerOptions": {
-      "jsx": "react"
-    }
-  } 
-```
+Run the following script to create the ShipStation shipping carrier in Adobe Commerce:
+
+```  $bash
+npm run create-shipping-carriers
+  ```
+
+This script registers the ShipStation shipping method in your Adobe Commerce instance using the OAuth credentials provided in your `.env` file.
+
+### Configure Webhooks
+
+In your Adobe Commerce module or project, add or update the `webhooks.xml` file to integrate with your deployed app. Create or edit `app/code/Vendor/Module/etc/webhooks.xml` with the following content:
+
+```  $xml
+<?xml version="1.0" encoding="UTF-8"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_AdobeCommerceWebhooks:etc/webhooks.xsd">
+    <method name="plugin.magento.out_of_process_shipping_methods.api.shipping_rate_repository.get_rates" type="after">
+        <hooks>
+            <batch name="shipping_methods">
+                <hook name="oope_shipping_methods_carrier_one"
+                      url="https://your-deployed-app-url"
+                      method="POST"
+                      required="true"
+                      fallbackErrorMessage="Unable to retrieve ShipStation shipping rates.">
+                    <fields>
+                        <field name="rateRequest" source="rateRequest" />
+                    </fields>
+                </hook>
+            </batch>
+        </hooks>
+    </method>
+</config>
+  ```
+
+Replace `https://your-deployed-app-url` with the actual URL of your deployed app from the `aio app deploy` step.
+
+After updating `webhooks.xml`, run the following commands to apply the changes:
+
+``` $bash
+bin/magento setup:upgrade
+bin/magento cache:flush
+ ```
+
+## Integrate with EDS Storefront
+
+You can integrate your Out-of-Process Shipping Extension (OOPE) — powered by ShipStation — with an Edge Delivery Services (EDS) Storefront. This enables real-time shipping rates to be displayed in a headless storefront.
+
+### Prerequisites
+
+Before integrating, ensure the following:
+- Your EDS Storefront is integrated with Adobe Commerce.
+- The Storefront is configured to use the **Checkout Drop-in Component**.
+
+> The Drop-in Component allows customers to enter shipping details, view available shipping methods (including ShipStation rates), and complete their order in a seamless UI block.
+
+### For Full Integration Instructions
+
+See the [DROPINS.md](https://github.com/BlueAcornInc/showcase-evergreen-commerce-storefront/blob/main/DROPINS.md) file in the EDS Storefront repository for a complete walkthrough. This guide covers:
+- Fetching and displaying ShipStation shipping rates.
+- Handling shipping method selection.
+- Integrating with the checkout flow in Adobe Commerce.
+- Best practices for performance and extensibility.">

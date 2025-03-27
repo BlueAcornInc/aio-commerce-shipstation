@@ -27,6 +27,8 @@ async function main(configFilePath) {
 
     const client = await getAdobeCommerceClient(process.env);
 
+    console.log(data.shipping_carriers);
+
     for (const shippingCarrier of data.shipping_carriers) {
         const response = await client.createOopeShippingCarrier(shippingCarrier);
         const shippingCarrierCode = shippingCarrier.carrier.code;
@@ -37,8 +39,12 @@ async function main(configFilePath) {
             console.error(`Failed to create shipping carrier ${shippingCarrierCode}`);
             console.error(`Status code: ${response.statusCode}`);
             console.error(`Error message: ${response.message}`);
+            console.error("22222");
+            console.error("22222");
+            console.error(data);
             // Also log the body if it exists
             if (response.body) {
+
                 console.error(`Body: ${JSON.stringify(response.body, null, 2)}`);
             }        }
     }
