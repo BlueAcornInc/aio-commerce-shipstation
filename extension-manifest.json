@@ -1,8 +1,8 @@
 {
-  "name": "my-shipstation-app",
-  "displayName": "ShipStation App for Commerce",
-  "description": "Provides OOP shipping integration and an Admin UI for config",
+  "name": "shipstation",
+  "displayName": "ShipStation",
+  "description": "Provides ShipStation as a shipping method",
   "platform": "web",
-  "id": "my-shipstation-app",
+  "id": "shipstation",
   "version": "1.0.0"
 }

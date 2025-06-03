@@ -8,7 +8,7 @@ runtimeManifest:
           runtime: nodejs:22
           web: "yes"
           annotations:
-            require-adobe-auth: false
+            require-adobe-auth: true
             final: true
       web:
         src: 'src/commerce-backend-ui-1/web-src'
