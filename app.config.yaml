@@ -19,7 +19,7 @@ application:
 extensions:
   commerce/backend-ui/1:
     $include: src/commerce-backend-ui-1/ext.config.yaml
-operations:
-  view:
-    - type: web
-      impl: web
+    operations:
+      view:
+        - type: web
+          impl: web
