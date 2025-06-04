@@ -8,18 +8,33 @@ application:
             function: src/app/actions/shipstation-config/index.js
             runtime: nodejs:22
             web: "yes"
+            inputs:
+              SHIPSTATION_API_KEY: $SHIPSTATION_API_KEY
+              SHIPSTATION_CARRIER_IDS: $SHIPSTATION_CARRIER_IDS
+              SHIPSTATION_WAREHOUSE_NAME: $SHIPSTATION_WAREHOUSE_NAME
+              SHIPSTATION_WAREHOUSE_PHONE: $SHIPSTATION_WAREHOUSE_PHONE
+              SHIPSTATION_WAREHOUSE_ADDRESS_LINE1: $SHIPSTATION_WAREHOUSE_ADDRESS_LINE1
+              SHIPSTATION_WAREHOUSE_CITY: $SHIPSTATION_WAREHOUSE_CITY
+              SHIPSTATION_WAREHOUSE_REGION: $SHIPSTATION_WAREHOUSE_REGION
+              SHIPSTATION_WAREHOUSE_POSTCODE: $SHIPSTATION_WAREHOUSE_POSTCODE
+              SHIPSTATION_WAREHOUSE_COUNTRY: $SHIPSTATION_WAREHOUSE_COUNTRY
             annotations:
-              require-adobe-auth: false
+              require-adobe-auth: true
           shipstation-shipping:
             function: src/app/actions/shipstation-shipping/index.js
             web: "raw"
             runtime: nodejs:22
             annotations:
-              require-adobe-auth: false
+              require-adobe-auth: true
 extensions:
   commerce/backend-ui/1:
     $include: src/commerce-backend-ui-1/ext.config.yaml
-    operations:
-      view:
-        - type: web
-          impl: web
+operations:
+  view:
+    - type: web
+      impl: web
+web: 'yes'
+inputs:
+  LOG_LEVEL: debug
+annotations:
+  require-adobe-auth: true

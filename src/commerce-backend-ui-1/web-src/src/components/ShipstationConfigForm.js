@@ -1,16 +1,14 @@
-// src/commerce-backend-ui-1/web-src/ShipstationConfigForm.jsx
 import React, { useState, useEffect } from "react";
 import {
   Button,
   Form,
   TextField,
-  Heading,
   Content,
   View,
 } from "@adobe/react-spectrum";
 
 export default function ShipstationConfigForm({ actionUrl }) {
-  const [apiKey, setApiKey] = useState("");
+    const [apiKey, setApiKey] = useState("");
   const [carrierIds, setCarrierIds] = useState("");
   const [warehouseName, setWarehouseName] = useState("");
   const [warehousePhone, setWarehousePhone] = useState("");
@@ -66,7 +64,6 @@ export default function ShipstationConfigForm({ actionUrl }) {
       shipToName,
       shipToPhone,
     };
-
     try {
       const resp = await fetch(actionUrl, {
         method: "POST",
@@ -82,7 +79,6 @@ export default function ShipstationConfigForm({ actionUrl }) {
 
   return (
     <View padding="size-250">
-      <Heading level={1}>ShipStation Config Editor</Heading>
       <Content marginBottom="size-200">{statusMsg}</Content>
       <Form maxWidth="size-6000">
         <TextField
