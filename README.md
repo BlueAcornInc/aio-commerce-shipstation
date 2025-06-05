@@ -34,6 +34,7 @@ These links were shared by Adobe as bit of a primer:
 - [Back office starter kit](https://developer.adobe.com/commerce/extensibility/starter-kit/)
 - [Installing the starter kit](https://developer.adobe.com/commerce/extensibility/starter-kit/create-integration/)
 - [Checkout starter kit](https://github.com/adobe/commerce-checkout-starter-kit)
+- [Adobe I/O Events Installation](https://developer.adobe.com/commerce/extensibility/events/installation/)
 - Internal Knowledge:
     - [#BLU-app-builder in Teams](https://teams.microsoft.com/l/channel/19%3A051oCCDZb2Yxa56RPVMxlMw36Pu5vjqmYNXI2yotRf01%40thread.tacv2/BLU-app-builder?groupId=ac33e213-3109-42cc-8cc7-67767dbe2433)
     - [Adobe - Checkout Session vs Client Side Nonce](https://groupinfosysus.sharepoint.com/:b:/s/AppBuilderTeam/EcRLFdELp-xIreVnol2hQK0Be7txJQZ3wJTONYH64WiLQQ?e=gXJeBe)
