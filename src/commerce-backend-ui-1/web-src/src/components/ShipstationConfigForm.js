@@ -102,8 +102,8 @@ export default function ShipstationConfigForm({ actionUrl }) {
 
 const links = [
     { label: 'Blue Acorn iCi', url: 'https://blueacornici.com/' },
-    { label: 'Create an Issue', url: 'https://github.com/BlueAcornInc/aio-commerce-yotpo/issues/new' },
-    { label: 'Issue Tracker', url: 'https://github.com/BlueAcornInc/aio-commerce-yotpo/issues' },
+    { label: 'Create an Issue', url: 'https://github.com/BlueAcornInc/aio-commerce-shipstation/issues/new' },
+    { label: 'Issue Tracker', url: 'https://github.com/BlueAcornInc/aio-commerce-shipstation/issues' },
     { label: 'Contact Us', url: 'apps@blueacornici.com' },
     { label: 'Documentation', url: 'https://apps.blueacornici.shop/' },
 ]
@@ -121,7 +121,7 @@ const links = [
             <Heading level={3}>Storefront Blocks</Heading>
 
                 <Content>
-                    Yotpo must also be configured in the Adobe Commerce Storefront configs.json.<br /><br />
+                    Shipstation must also be configured in the Adobe Commerce Storefront configs.json.<br /><br />
                 </Content>
 
             <Heading level={3}>General Settings</Heading>
@@ -197,7 +197,7 @@ const links = [
         <Button variant="accent" onPress={handleSave} isDisabled={hasError}>
           Save
         </Button>
-            
+
 
             {hasError && (
                 <Content UNSAFE_style={{ color: "#b0b0b0" }}>
