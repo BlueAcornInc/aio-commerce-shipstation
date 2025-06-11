@@ -6,66 +6,6 @@ ShipStation App for Adobe Commerce! This will be a playground to dupe the shippi
 
 - [This Project in Adobe App Builder Developer Console](https://developer.adobe.com/console/projects/35582/4566206088345338585/overview)
 - [ShipStation API docs](https://docs.shipstation.com)
-- [Adobe's Intital Sizing Doc with Reqs](https://groupinfosysus.sharepoint.com/:w:/s/AppBuilderTeam/EUx3Q61jBe5EoFmPFISPj3kBw5bZ9KG4G6n_4lN6NYJTOg?e=DHyJdX)
-
-## Initial Scope Shared by Adobe
-
-> Integrate to shipstation shipping extension
-> https://commercemarketplace.adobe.com/auctane-api.html
-
-## Scope Agreed to in Blue Acorn SOW
-
-[View Source - Blue Acorn SOW for App Builder including Shipstation Work](https://docs.google.com/document/d/1csPluOejPnCXAH52mUQL5AYoNUHlqvre/edit)
-
-Shipstation Module will integrate with Adobe Commerce, leveraging out-of-process extensibility techniques to introduce ShipStation shipping details into the native buyer experience. No ShipStation customizations (in-depth styling or customizations) in MVP implementation.
-
-- Base functionality for MVP, targeted in this SOW includes:
-    - Core ShipStation integration to enable basic order fulfillment
-- Base functionality will not include:
-    - Shipment tracking label generation
-    - The system can connect with the ShipStation platform and sync orders from Adobe Commerce
-
-## Getting Started
-
-These links were shared by Adobe as bit of a primer:
-
-- [Introduction to App Builder](https://experienceleague.adobe.com/en/docs/commerce-learn/tutorials/adobe-developer-app-builder/introduction-to-app-builder)
-- [Getting access to App Builder](https://developer.adobe.com/app-builder/docs/overview/getting_access/)
-- [Back office starter kit](https://developer.adobe.com/commerce/extensibility/starter-kit/)
-- [Installing the starter kit](https://developer.adobe.com/commerce/extensibility/starter-kit/create-integration/)
-- [Checkout starter kit](https://github.com/adobe/commerce-checkout-starter-kit)
-- [Adobe I/O Events Installation](https://developer.adobe.com/commerce/extensibility/events/installation/)
-- Internal Knowledge:
-    - [#BLU-app-builder in Teams](https://teams.microsoft.com/l/channel/19%3A051oCCDZb2Yxa56RPVMxlMw36Pu5vjqmYNXI2yotRf01%40thread.tacv2/BLU-app-builder?groupId=ac33e213-3109-42cc-8cc7-67767dbe2433)
-    - [Adobe - Checkout Session vs Client Side Nonce](https://groupinfosysus.sharepoint.com/:b:/s/AppBuilderTeam/EcRLFdELp-xIreVnol2hQK0Be7txJQZ3wJTONYH64WiLQQ?e=gXJeBe)
-    - [Adobe - Out-of-process Payment Gateway Integrations](https://groupinfosysus.sharepoint.com/:b:/s/AppBuilderTeam/EXuOVZZp0ZhMoYOygzOgDO8B0GpGC-42f2fWMSIzrbQHWA?e=1Cghlr)
-    - [Stripe - MVP Technical Specs](https://groupinfosysus.sharepoint.com/:b:/s/AppBuilderTeam/EXuOVZZp0ZhMoYOygzOgDO8B0GpGC-42f2fWMSIzrbQHWA?e=1Cghlr)
-
-## Technical Approach (From Adobe)
-
-Adobe provided the following guidance on how to proceed with this module. Let's review and try to implement the following:
-
-- call Ship Station API to calculate shipping charges during checkout
-    - OOP Shipping Method with new get_rates webhook
-    - https://developer.adobe.com/commerce/extensibility/starter-kit/checkout/use-cases/#shipping-methods
-    - https://developer.adobe.com/commerce/extensibility/starter-kit/checkout/shipping-reference/
-- export orders from Commerce to Ship Station for fulfillment
-    - event based backend integration
-    - https://developer.adobe.com/commerce/extensibility/starter-kit/integration/events/
-- inventory levels synchronized between Commerce and Ship Station
-    - event based backend integration
-    - https://developer.adobe.com/commerce/extensibility/starter-kit/integration/stock/
-- tracking information from Ship Station sent to Commerce
-    - event based integration
-    - https://developer.adobe.com/commerce/extensibility/starter-kit/integration/shipments/
-- new feature: in the US Ship Station can provide rate options that customers can select during checkout For EDS Storefront, either:
-    - provide sample glue code to load your own UI component into EDS Storefront
-    - implement frontend component with EDS Drop-in SDK
-    - https://experienceleague.adobe.com/developer/commerce/storefront/dropins/all/introduction/
-- configuration in Admin
-    - React SPA as part of App Builder application and loaded into Commerce Admin
-    - SPA has API access to Commerce and App Builder
-    - https://developer.adobe.com/commerce/extensibility/admin-ui-sdk/
 
 ## Adobe Commerce Sandbox Environment
 
@@ -77,20 +17,6 @@ We have a sandbox environment
 - ["Evergreen" LIVE staging instance](https://stage-sandbox.m2cloud.blueacorn.net)
 - ["Evergreen" in Bitbucket Deployments](https://bitbucket.org/blueacorn/showcase-evergreen-commerce/deployments)
 
-### Evergreen - The Mock Enterprise Organization
-
-Evergreen is a mock enterprise-scale organization, a persona of a business with the kinds of architectural needs we are trying to speak to. At current, Evergreen isn’t intended to be of the financial and resource scale of a client we might want to attract, but one of our main project goals is to emulate ever sophisticated organizations. This will also help us in pursuits like testing and honing new technologies we wish to introduce into the market, such as Adobe’s Real-time CDP where we need to learn the platform where we can successfully sell it. If we are able to mock an organization of significant scale, we could potentially service the data input needs of the CDP thus we’re both able to demonstrate this running at some scale, and perfect our implementation at the same time.
-
-### Environments
-
-Evergreen is hosted in the [Blue Acorn iCi Pro Sandbox](https://console.adobecommerce.com/acadminblu67f4/tupar6lous4x4) Adobe Commerce Cloud project. We use the staging environment of this project as the live demo for our showcase, where the unstable development environment we do some testing to not disrupt staging.
-
-**_NOTE_** that the current CI/CD is sourced from the [Bitbucket Repo](https://bitbucket.org/blueacorn/showcase-evergreen-commerce/deployments), and the Github repo is a fork at this point.
-
-| Environment  | Bitbucket Branch | Cloud Branch | Console                                                                            | Frontend                                                                 | Admin                                                                                     |
-| ------------ | ---------------- | ------------ | ---------------------------------------------------------------------------------- | ------------------------------------------------------------------------ | ----------------------------------------------------------------------------------------- |
-| **Staging**  | `main`           | `staging`    | [Console](https://console.adobecommerce.com/acadminblu67f4/tupar6lous4x4/staging)  | [Frontend](https://stage-sandbox.m2cloud.blueacorn.net)                  | [Admin](https://stage-sandbox.m2cloud.blueacorn.net/index.php/admin_baici/)               |
-| **Unstable** | `unstable`       | `unstable`   | [Console](https://console.adobecommerce.com/acadminblu67f4/tupar6lous4x4/unstable) | [Frontend](http://unstable-s7xr52a-tupar6lous4x4.us-4.magentosite.cloud) | [Admin](https://unstable-s7xr52a-tupar6lous4x4.us-4.magentosite.cloud/admin_baici/admin/) |
 
 ## Adobe App Builder Entitltements within the Admin Console
 
