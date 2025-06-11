@@ -7,50 +7,11 @@ ShipStation App for Adobe Commerce! This will be a playground to dupe the shippi
 - [This Project in Adobe App Builder Developer Console](https://developer.adobe.com/console/projects/35582/4566206088345338585/overview)
 - [ShipStation API docs](https://docs.shipstation.com)
 
-## Adobe Commerce Sandbox Environment
-
-We have a sandbox environment
-
-- ["Evergreen" Adobe Commerce Sandbox Github Repo
-  ](https://github.com/BlueAcornInc/showcase-evergreen-commerce)
-- ["Evergreen" staging environment in Adobe Commerce Cloud](https://console.adobecommerce.com/acadminblu67f4/tupar6lous4x4/staging)
-- ["Evergreen" LIVE staging instance](https://stage-sandbox.m2cloud.blueacorn.net)
-- ["Evergreen" in Bitbucket Deployments](https://bitbucket.org/blueacorn/showcase-evergreen-commerce/deployments)
-
-
-## Adobe App Builder Entitltements within the Admin Console
-
-Access to App Builder is metered through the Adobe Admin Console where our organization handles the various Adobe product entitlements, such as AEMaaCS and Adobe Commerce Cloud. Users must exist in the `default` group to get access.
-
-- [App Builder Developer Console](https://developer.adobe.com)
-- Adding Users:
-    - [Developers section of Adobe I/O Runtime User is Admin Console](https://adminconsole.adobe.com/86FF829657DCB10D7F000101@AdobeOrg/users/developers)
-    - [Adobe I/O Runtime Users in Admin Console](https://adminconsole.adobe.com/86FF829657DCB10D7F000101@AdobeOrg/products/329E0E40B8550C6DF52A/profiles/195671759/admins)
-    - [Adobe Experience Plartform in Admin Console](https://adminconsole.adobe.com/86FF829657DCB10D7F000101@AdobeOrg/products/725EBBA0ED249E7DD6DA/users)
-
 ## Github Codespaces, .devcontainer and vscode
 
 This project has a .devcontainer directory which contains a composition capable of running `aio` as well as a cors-anywhere proxy that can be used to get around https issues. To get started with VS Code and devcontainers, install the Remote - Containers extension, open your project in VS Code, and select "Reopen in Container" from the Command Palette. For more details, visit [Developing inside a Container](https://code.visualstudio.com/docs/devcontainers/containers).
 
 This project is also hosted in Github, where a Codespace can be used to potentially run this project. This environment is provided as-is, and developers to this project are free to leverage their own stacks.
-
-## Open Questions
-
-We are still trying to figure this out, this is a set of questions we should send to the OOPE Lead Architect at Adobe [Russ Johnson](mailto:rujohnso@adobe.com) who can help guide us.
-
-- Our current idea is to take the aio templates mentioned below, and we port the shipping method runtimes over, and the configuration yaml... how does this get applied to multiple storefronts?
-- There is an [app generation command](https://developer.adobe.com/commerce/extensibility/events/installation/#on-premise-installation) how does this work? If this needs to generate based on oope events and the connector data, seems a developer _would_ need to have this locally to perform the initial generation... seems complex, can they talk us through?
-- [link to subscribing events](https://developer.adobe.com/commerce/extensibility/events/commands/#subscribe-to-an-event) this shows me creating an io_events.yaml in commerce core to register events, or running `bin/magento event:subscribe` but surely we shouldn't have to make any change to commerce core. How is this managed?\* naming and title conventions for app builder app?
-    - There's no camel-casing, spaces, underscores, dashes, etc etc...
-- best template for aio app builder app? We do not see any "Commerce" related capabilities exposed in app builder. Do we need to get an entitlement enabled for this?
-    - @adobe/generator-app-events-generic ?
-    - @adobe/generator-app-api-mesh includes events and the mesh, builds correctly...
-- How do we submit an app for "approval"? Does not seem to be exposed, see no section for "Commerce" apps...
-- How do we set up the commerce connector locally? Is there a way to configure the staging and production commerce connector keys as environment variables?
-- Also seems like we do not have enough data spaces for local development, can you remark on how data spaces are generally done?
-- I understand that a merchant will want a combination of app builder apps layered on top of each other to provide like payment methods and shippiung methods... but [this explaination](https://developer.adobe.com/commerce/extensibility/events/configure-commerce/) certainly makes it seem that it's one app builder app to one merchant instance. How do multiple app builder apps co-exist on one event bus? How is this configured?
-- Can you describe a typical development lifecycle? Do each developer create their own local commerce instances, or with the central app builder app can we all edit against like our staging sandbox? What is typical?
-- Can we get a breakdown of how these commerce apps are typically structured? We can demonstrate this repo to give our understanding so far...
 
 ## Setup
 
@@ -160,11 +121,3 @@ Mock AdobeAdminIms Module: Yes
 - Click "Refresh Integrations" in that admin area
 
 This registers the menu and you should see it now after admin refresh. But the form wont load. to do that:
-
-## Backend Form
-
-- Cancel out of the aio app dev command currently running,  It's already registered and does not need to run all the time.
-  If you have 2 apps running, 1 of them being Admin SDK form and 1 of them being another application ( reference your `app.config.yaml` file of your AIO app, then you need to run `aio app run -e [application_name]` to deploy the endpoints or runtime functions to adobe before your form can work completely if it has dependencies on it. You will see message in terminal saying it was successfully deployed. now terminate that command with ctrl+c.
-- Run `aio app run -e commerce/backend-ui/1`
--  Go back to Magento admin, refresh, and you should see the form load in the space now.
- 
