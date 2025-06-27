@@ -166,7 +166,7 @@ For **local development**, these are typically set in your `.env` file within yo
     ADOBE_COMMERCE_INTEGRATION_TOKEN=your_adobe_commerce_api_token
     ```
 
-### Shipstation Environment Configuration 
+### Shipstation Environment Configuration
 
 To configure this application, be sure that the following environment variables are configured. This can either be done pre-deployment with the `.env` file in this repo, or configured in App Builder as part of the App installation process.
 
@@ -190,7 +190,7 @@ You can generate this file using the command `aio app use`.
 
 ```
 
-`aio app use` does not add these SHIPSTATION_ prefixed variables and must be added manually. 
+`aio app use` does not add these SHIPSTATION\_ prefixed variables and must be added manually.
 
 **Important Notes:**
 
