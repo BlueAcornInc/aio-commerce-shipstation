@@ -1,12 +1,22 @@
 // src/app/actions/shipstation-shipping/index.js
 const { Core } = require("@adobe/aio-sdk");
 const fetch = require("node-fetch");
-const stateLib = require("@adobe/aio-lib-state");
+const { readConfiguration } = require("../../../shared/configurationHelper");
 
+/**
+ *
+ * @param {object} carrierData Carrier data
+ * @returns {object} Shipping operation
+ */
 function createShippingOperation(carrierData) {
   return { op: "add", path: "result", value: carrierData };
 }
 
+/**
+ *
+ * @param {string} message Error message
+ * @returns {object} Error response
+ */
 function singleErrorMethod(message) {
   return {
     statusCode: 200,
@@ -27,6 +37,12 @@ function singleErrorMethod(message) {
   };
 }
 
+/**
+ *
+ * @param {object} rateRequest Rate request object
+ * @param {object} logger Logger
+ * @returns {Array} Array of Package object
+ */
 function buildPackages(rateRequest, logger) {
   const packages = [];
   if (!rateRequest || typeof rateRequest !== "object") {
@@ -45,6 +61,11 @@ function buildPackages(rateRequest, logger) {
   return packages;
 }
 
+/**
+ *
+ * @param {object} params Request
+ * @returns {object} Response
+ */
 async function main(params) {
   const logger = Core.Logger("shipping-methods", {
     level: params.LOG_LEVEL || "info",
@@ -86,13 +107,7 @@ async function main(params) {
       return singleErrorMethod("Missing required shipping address fields");
     }
 
-    // 1) Load config from aio-lib-state
-    const state = await stateLib.init();
-    const entry = await state.get("shipstationConfig");
-    let config = {};
-    if (entry && entry.value) {
-      config = JSON.parse(entry.value);
-    }
+    const config = readConfiguration(params, "shipstation");
 
     // Extract all fields from the config
     const shipstationApiKey = config.shipstationApiKey;
