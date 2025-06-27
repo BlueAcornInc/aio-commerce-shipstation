@@ -175,9 +175,9 @@ describe("Admin Main Action", () => {
       expect(response.headers["Content-Type"]).toBe("application/json");
       const body = JSON.parse(response.body);
       expect(body.success).toBe(true);
-      expect(body.message).toBe("Loaded ShipStation config"); // Note: The message says "ShipStation config" - you might want to correct this in your action if it should be "ShipStation config"
+      expect(body.message).toBe("Loaded ShipStation config");
       expect(body.config).toEqual(mockLoadedConfig);
-      expect(mockReadConfiguration).toHaveBeenCalledWith(params, "ShipStation");
+      expect(mockReadConfiguration).toHaveBeenCalledWith(params, "shipstation");
       expect(mockLogger.error).not.toHaveBeenCalled();
     });
 

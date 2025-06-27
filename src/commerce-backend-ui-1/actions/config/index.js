@@ -28,7 +28,7 @@ async function main(params) {
       warehouseCountryCode,
       shipToName,
       shipToPhone,
-    } = params;
+    } = params.payload;
 
     if (!shipstationApiKey || !shipstationCarrierIds) {
       logger.error("Missing field for request", params);

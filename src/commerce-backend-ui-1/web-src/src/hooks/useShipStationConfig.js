@@ -6,7 +6,7 @@ import { callAction } from "../utils";
  * @param props
  * @param setFormState
  */
-export function useBazaarvoiceConfigLoader(props, setFormState) {
+export function useShipStationConfigLoader(props, setFormState) {
   const [statusMsg, setStatusMsg] = useState("Loading config...");
   const [hasError, setHasError] = useState(false);
 
@@ -38,7 +38,7 @@ export function useBazaarvoiceConfigLoader(props, setFormState) {
  *
  * @param props
  */
-export function useBazaarvoiceConfigSaver(props) {
+export function useShipStationConfigSaver(props) {
   const [statusMsg, setStatusMsg] = useState("");
   const [hasError, setHasError] = useState(false);
 
