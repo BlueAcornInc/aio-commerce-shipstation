@@ -9,21 +9,18 @@ the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR REPRESENTA
 OF ANY KIND, either express or implied. See the License for the specific language
 governing permissions and limitations under the License.
 */
-import { register } from '@adobe/uix-guest'
-import { MainPage } from './MainPage'
+import { register } from "@adobe/uix-guest";
+import { MainPage } from "./MainPage";
+import { EXTENSION_ID } from "../constants";
 
 export default function ExtensionRegistration(props) {
-  init().catch(console.error)
-  return <MainPage runtime={props.runtime} ims={props.ims} />
+  init().catch(console.error);
+  return <MainPage runtime={props.runtime} ims={props.ims} />;
 }
 
 const init = async () => {
-
-  const extensionId = 'ship-station'
-
   await register({
-    id: extensionId,
-    methods: {
-    }
-  })
-}
+    id: EXTENSION_ID,
+    methods: {},
+  });
+};

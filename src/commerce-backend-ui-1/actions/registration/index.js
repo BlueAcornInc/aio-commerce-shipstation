@@ -10,33 +10,36 @@ OF ANY KIND, either express or implied. See the License for the specific languag
 governing permissions and limitations under the License.
 */
 
+/**
+ * @returns {object} Registration object
+ */
 async function main() {
-    const extensionId = 'ShipStation'
+  const extensionId = "ShipStation";
 
-    return {
-        statusCode: 200,
-        body: {
-            registration: {
-                menuItems: [
-                    {
-                        id: `${extensionId}::first`,
-                        title: 'General Configuration',
-                        parent: `${extensionId}::apps`,
-                        sortOrder: 1
-                    },
-                    {
-                        id: `${extensionId}::apps`,
-                        title: 'ShipStation',
-                        isSection: true,
-                        sortOrder: 100
-                    }
-                ],
-                page: {
-                    title: 'ShipStation Configuration'
-                }
-            }
-        }
-    }
+  return {
+    statusCode: 200,
+    body: {
+      registration: {
+        menuItems: [
+          {
+            id: `${extensionId}::first`,
+            title: "General Configuration",
+            parent: `${extensionId}::apps`,
+            sortOrder: 1,
+          },
+          {
+            id: `${extensionId}::apps`,
+            title: "ShipStation",
+            isSection: true,
+            sortOrder: 100,
+          },
+        ],
+        page: {
+          title: "ShipStation Configuration",
+        },
+      },
+    },
+  };
 }
 
-exports.main = main
+exports.main = main;

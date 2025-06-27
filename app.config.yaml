@@ -9,17 +9,12 @@ application:
             runtime: nodejs:22
             web: "yes"
             inputs:
-              SHIPSTATION_API_KEY: $SHIPSTATION_API_KEY
-              SHIPSTATION_CARRIER_IDS: $SHIPSTATION_CARRIER_IDS
-              SHIPSTATION_WAREHOUSE_NAME: $SHIPSTATION_WAREHOUSE_NAME
-              SHIPSTATION_WAREHOUSE_PHONE: $SHIPSTATION_WAREHOUSE_PHONE
-              SHIPSTATION_WAREHOUSE_ADDRESS_LINE1: $SHIPSTATION_WAREHOUSE_ADDRESS_LINE1
-              SHIPSTATION_WAREHOUSE_CITY: $SHIPSTATION_WAREHOUSE_CITY
-              SHIPSTATION_WAREHOUSE_REGION: $SHIPSTATION_WAREHOUSE_REGION
-              SHIPSTATION_WAREHOUSE_POSTCODE: $SHIPSTATION_WAREHOUSE_POSTCODE
-              SHIPSTATION_WAREHOUSE_COUNTRY: $SHIPSTATION_WAREHOUSE_COUNTRY
+              LOG_LEVEL: debug
+              ENCRYPTION_KEY: $ENCRYPTION_KEY
+              ENCRYPTION_IV: $ENCRYPTION_IV
+              RUNTIME_NAMESPACE: $AIO_RUNTIME_NAMESPACE
             annotations:
-              require-adobe-auth: true
+              require-adobe-auth: false
           shipstation-shipping:
             function: src/app/actions/shipstation-shipping/index.js
             web: "raw"
@@ -33,12 +28,12 @@ operations:
   view:
     - type: web
       impl: web
-web: 'yes'
+web: "yes"
 inputs:
   LOG_LEVEL: debug
 annotations:
   require-adobe-auth: true
-requiredProducts: 
+requiredProducts:
   - code: COMMC
     minVersion: 2.4.7
     maxVersion: 2.4.99

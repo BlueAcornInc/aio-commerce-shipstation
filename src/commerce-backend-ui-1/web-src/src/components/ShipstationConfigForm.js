@@ -1,235 +1,190 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import {
   Button,
   Form,
   TextField,
+  Heading,
   Content,
   View,
-  Picker,
-  Item,
-  Heading,
   Grid,
-  Text
+  Text,
 } from "@adobe/react-spectrum";
+import {
+  useShipStationConfigLoader,
+  useShipStationConfigSaver,
+} from "../hooks/useShipStationConfig";
 
-const DEBUG = false; // Set to true for detailed error messages
+const DEBUG = false;
 
+/**
+ *
+ * @param props
+ */
+export default function ShipstationConfigForm(props) {
+  const [formState, setFormState] = useState({
+    shipstationApiKey: "",
+    shipstationCarrierIds: "",
+    warehouseName: "",
+    warehousePhone: "",
+    warehouseAddressLine1: "",
+    warehouseCityLocality: "",
+    warehouseStateProvince: "",
+    warehousePostalCode: "",
+    warehouseCountryCode: "",
+    shipToName: "",
+    shipToPhone: "",
+  });
 
+  const { statusMsg: loadStatusMsg, hasError: loadHasError } =
+    useShipStationConfigLoader(props, setFormState);
 
-export default function ShipstationConfigForm({ actionUrl }) {
-    const [apiKey, setApiKey] = useState("");
-  const [carrierIds, setCarrierIds] = useState("");
-  const [warehouseName, setWarehouseName] = useState("");
-  const [warehousePhone, setWarehousePhone] = useState("");
-  const [warehouseAddressLine1, setWarehouseAddressLine1] = useState("");
-  const [warehouseCity, setWarehouseCity] = useState("");
-  const [warehouseState, setWarehouseState] = useState("");
-  const [warehousePostcode, setWarehousePostcode] = useState("");
-  const [warehouseCountry, setWarehouseCountry] = useState("");
-  const [shipToName, setShipToName] = useState("");
-  const [shipToPhone, setShipToPhone] = useState("");
-  const [statusMsg, setStatusMsg] = useState("Loading config...");
-  const [hasError, setHasError] = useState(false);
+  const {
+    saveConfig,
+    statusMsg: saveStatusMsg,
+    hasError: saveHasError,
+  } = useShipStationConfigSaver(props);
 
-  useEffect(() => {
-    async function loadConfig() {
-      try {
-        const resp = await fetch(actionUrl);
-        if (!resp.ok) throw new Error(`GET failed: HTTP ${resp.status}`);
-        const data = await resp.json();
-        console.log("Fetched config:", data); // Debug response
-        if (data.config) {
-          setApiKey(data.config.shipstationApiKey || "");
-          setCarrierIds(data.config.shipstationCarrierIds || "");
-          setWarehouseName(data.config.warehouseName || "");
-          setWarehousePhone(data.config.warehousePhone || "");
-          setWarehouseAddressLine1(data.config.warehouseAddressLine1 || "");
-          setWarehouseCity(data.config.warehouseCityLocality || "");
-          setWarehouseState(data.config.warehouseStateProvince || "");
-          setWarehousePostcode(data.config.warehousePostalCode || "");
-          setWarehouseCountry(data.config.warehouseCountryCode || "");
-          setShipToName(data.config.shipToName || "");
-          setShipToPhone(data.config.shipToPhone || "");
-        }
-        setStatusMsg("Config loaded successfully");
-        setHasError(false);
-      } catch (err) {
-        setHasError(true);
-        if (DEBUG) {
-        setStatusMsg(`Error loading config: ${err.message}`);
-        } else {
-          setStatusMsg("");
-          console.log("Error loading config:", err);
-      }
-    }
-    }
-    loadConfig();
-  }, [actionUrl]);
+  const handleChange = (name, value) => {
+    setFormState((prev) => ({ ...prev, [name]: value }));
+  };
 
-  async function handleSave() {
-    const body = {
-      shipstationApiKey: apiKey,
-      shipstationCarrierIds: carrierIds,
-      warehouseName,
-      warehousePhone,
-      warehouseAddressLine1,
-      warehouseCityLocality: warehouseCity,
-      warehouseStateProvince: warehouseState,
-      warehousePostalCode: warehousePostcode,
-      warehouseCountryCode: warehouseCountry,
-      shipToName,
-      shipToPhone,
-    };
-    try {
-      const resp = await fetch(actionUrl, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(body),
-      });
-      if (!resp.ok) throw new Error(`POST failed: HTTP ${resp.status}`);
-      setStatusMsg(`Configuration saved successfully`);
-      setHasError(false);
-    } catch (err) {
-      setHasError(true);
-      if (DEBUG) {
-      setStatusMsg(`Error saving config: ${err.message}`);
-      } else {
-        setStatusMsg("");
-        console.error("Error saving config:", err);
-    }
-  }
-  }
+  const handleSave = async () => {
+    saveConfig(formState);
+  };
 
-const links = [
-    { label: 'Blue Acorn iCi', url: 'https://blueacornici.com/' },
-    { label: 'Create an Issue', url: 'https://github.com/BlueAcornInc/aio-commerce-shipstation/issues/new' },
-    { label: 'Issue Tracker', url: 'https://github.com/BlueAcornInc/aio-commerce-shipstation/issues' },
-    { label: 'Contact Us', url: 'apps@blueacornici.com' },
-    { label: 'Documentation', url: 'https://apps.blueacornici.shop/' },
-]
+  const links = [
+    { label: "Blue Acorn iCi", url: "https://blueacornici.com/" },
+    {
+      label: "Create an Issue",
+      url: "https://github.com/BlueAcornInc/aio-commerce-shipstation/issues/new",
+    },
+    {
+      label: "Issue Tracker",
+      url: "https://github.com/BlueAcornInc/aio-commerce-shipstation/issues",
+    },
+    { label: "Contact Us", url: "apps@blueacornici.com" },
+    { label: "Documentation", url: "https://apps.blueacornici.shop/" },
+  ];
 
   return (
     <View padding="size-250">
-        {DEBUG && statusMsg && (
-            <Content marginBottom="size-200" UNSAFE_style={{ color: "#d2691e" }}>
-                {statusMsg}
-            </Content>
-        )}
-
+      {DEBUG && statusMsg && (
+        <Content marginBottom="size-200" UNSAFE_style={{ color: "#d2691e" }}>
+          {statusMsg}
+        </Content>
+      )}
       <Form maxWidth="size-6000">
-
-            <Heading level={3}>Storefront Blocks</Heading>
-
-                <Content>
-                    Shipstation must also be configured in the Adobe Commerce Storefront configs.json.<br /><br />
-                </Content>
-
-            <Heading level={3}>General Settings</Heading>
+        <Heading level={3} marginTop="size-200" marginBottom="size-100">
+          General Configuration
+        </Heading>
 
         <TextField
           label="API Key"
-          value={apiKey}
-          onChange={setApiKey}
+          value={formState.apiKey}
+          onChange={(val) => handleChange("apiKey", val)}
           isRequired
           isDisabled={hasError}
         />
         <TextField
           label="Carrier IDs (comma separated)"
-          value={carrierIds}
-          onChange={setCarrierIds}
+          value={formState.carrierIds}
+          onChange={(val) => handleChange("carrierIds", val)}
           isRequired
           isDisabled={hasError}
         />
         <TextField
           label="Warehouse Name"
-          value={warehouseName}
-          onChange={setWarehouseName}
+          value={formState.warehouseName}
+          onChange={(val) => handleChange("warehouseName", val)}
           isDisabled={hasError}
         />
         <TextField
           label="Warehouse Phone"
-          value={warehousePhone}
-          onChange={setWarehousePhone}
+          value={formState.warehousePhone}
+          onChange={(val) => handleChange("warehousePhone", val)}
           isDisabled={hasError}
         />
         <TextField
           label="Warehouse Address"
-          value={warehouseAddressLine1}
-          onChange={setWarehouseAddressLine1}
+          value={formState.warehouseAddressLine1}
+          onChange={(val) => handleChange("warehouseAddressLine1", val)}
           isDisabled={hasError}
         />
         <TextField
           label="Warehouse City"
-          value={warehouseCity}
-          onChange={setWarehouseCity}
+          value={formState.warehouseCity}
+          onChange={(val) => handleChange("warehouseCity", val)}
           isDisabled={hasError}
         />
         <TextField
           label="Warehouse State/Province"
-          value={warehouseState}
-          onChange={setWarehouseState}
+          value={formState.warehouseState}
+          onChange={(val) => handleChange("warehouseState", val)}
           isDisabled={hasError}
         />
         <TextField
           label="Warehouse Postcode"
-          value={warehousePostcode}
-          onChange={setWarehousePostcode}
+          value={formState.warehousePostcode}
+          onChange={(val) => handleChange("warehousePostcode", val)}
           isDisabled={hasError}
         />
         <TextField
           label="Warehouse Country"
-          value={warehouseCountry}
-          onChange={setWarehouseCountry}
+          value={formState.warehouseCountry}
+          onChange={(val) => handleChange("warehouseCountry", val)}
           isDisabled={hasError}
         />
         <TextField
           label="Ship-To Name (optional)"
-          value={shipToName}
-          onChange={setShipToName}
+          value={formState.shipToName}
+          onChange={(val) => handleChange("shipToName", val)}
           isDisabled={hasError}
         />
         <TextField
           label="Ship-To Phone (optional)"
-          value={shipToPhone}
-          onChange={setShipToPhone}
+          value={formState.shipToPhone}
+          onChange={(val) => handleChange("shipToPhone", val)}
           isDisabled={hasError}
         />
+
         <Button variant="accent" onPress={handleSave} isDisabled={hasError}>
           Save
         </Button>
 
+        {saveHasError && (
+          <Content UNSAFE_style={{ color: "#b0b0b0" }}>
+            <br />
+            {saveStatusMsg}
+          </Content>
+        )}
 
-            {hasError && (
-                <Content UNSAFE_style={{ color: "#b0b0b0" }}>
-                    <br />Secure configuration management is not yet supported. Please manage any setting with environment variables.
-                </Content>
-            )}
-
-            <br /><br />
-            <Heading level={3}>Support</Heading>
-            <Grid
-                columns={['1fr 1fr']}
-                gap="size-200"
-                width="size-3600"
+        <br />
+        <br />
+        <Heading level={3}>Support</Heading>
+        <Grid columns={["1fr 1fr"]} gap="size-200" width="size-3600">
+          {links.map((link) => (
+            <View
+              key={link.url}
+              borderWidth="thin"
+              borderColor="dark"
+              padding="size-200"
+              borderRadius="medium"
+              onClick={() => {
+                window.parent.postMessage(
+                  { type: "open-link", url: link.url },
+                  "*",
+                );
+              }}
+              role="button"
+              tabIndex={0}
+              style={{ cursor: "pointer" }}
             >
-                {links.map(link => (
-                    <View
-                        key={link.url}
-                        borderWidth="thin"
-                        borderColor="dark"
-                        padding="size-200"
-                        borderRadius="medium"
-                        onClick={() => {
-                            window.parent.postMessage({ type: 'open-link', url: link.url }, '*');
-                        }}
-                        role="button"
-                        tabIndex={0}
-                        style={{ cursor: 'pointer' }}
-                    >
-                        <Text><b>{link.label}</b>: {link.url}</Text>
-                    </View>
-                ))}
-            </Grid>
+              <Text>
+                <b>{link.label}</b>: {link.url}
+              </Text>
+            </View>
+          ))}
+        </Grid>
       </Form>
     </View>
   );
