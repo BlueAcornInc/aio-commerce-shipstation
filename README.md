@@ -1,6 +1,4 @@
-## README.md for ShipStation (Revised Template)
-
-# ShipStation for Adobe Commerce (App Builder Extension)
+# ShipStation by Blue Acorn
 
 This Adobe App Builder extension provides a secure and efficient way for Adobe Commerce merchants to store and consume their ShipStation credentials. All configurations, including sensitive credentials, are managed directly within the Adobe Commerce Admin backend. The App Builder application securely retrieves these settings and makes them available to your storefront via API, enabling order fulfillment, shipping label generation, and integration with ShipStation services.
 
@@ -217,9 +215,8 @@ For detailed instructions on setting up your development environment, testing, a
 
 For any issues, questions, or feature requests, please refer to the following:
 
-- **Documentation:** [Link to your detailed documentation (if available)]
-- **Issue Tracker:** [Link to your GitHub Issues or similar platform]
-- **Contact:** [Your support email or contact method]
+- **Issue Tracker:** [Github Issues](https://github.com/BlueAcornInc/aio-commerce-shipstation/issues)
+- **Contact:** [apps@blueacornici.com](mailto:apps@blueacornici.com)
 
 ---
 
