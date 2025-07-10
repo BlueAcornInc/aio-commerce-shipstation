@@ -4,23 +4,13 @@ application:
       aio-commerce-shipstation-app:
         license: Apache-2.0
         actions:
-          shipstation-config:
-            function: src/app/actions/shipstation-config/index.js
-            runtime: nodejs:22
-            web: "yes"
-            inputs:
-              LOG_LEVEL: debug
-              ENCRYPTION_KEY: $ENCRYPTION_KEY
-              ENCRYPTION_IV: $ENCRYPTION_IV
-              RUNTIME_NAMESPACE: $AIO_RUNTIME_NAMESPACE
-            annotations:
-              require-adobe-auth: false
           shipstation-shipping:
             function: src/app/actions/shipstation-shipping/index.js
-            web: "raw"
             runtime: nodejs:22
             annotations:
-              require-adobe-auth: true
+              require-adobe-auth: false
+              raw-http: true
+              final: true
 extensions:
   commerce/backend-ui/1:
     $include: src/commerce-backend-ui-1/ext.config.yaml
