@@ -168,54 +168,36 @@ For **local development**, these are typically set in your `.env` file within yo
     COMMERCE_BASE_URL=https://your-magento-store.com/graphql
     ```
 
-
 - `COMMERCE_CONSUMER_KEY`
-
-    - **Description:** The consumer key obtained from your Adobe Commerce API credentials. This is used for OAuth 1.0a authentication with the Adobe Commerce API. This is highly sensitive and must be kept secure.
-    - **Type:** String
-    - **Example `.env` entry:**
-      ```
-      COMMERCE_CONSUMER_KEY=your_commerce_consumer_key
-      ```
+  - **Description:** The consumer key obtained from your Adobe Commerce API credentials. This is used for OAuth 1.0a authentication with the Adobe Commerce API. This is highly sensitive and must be kept secure.
+  - **Type:** String
+  - **Example `.env` entry:**
+    ```
+    COMMERCE_CONSUMER_KEY=your_commerce_consumer_key
+    ```
 
 - `COMMERCE_CONSUMER_SECRET`
-
-    - **Description:** The consumer secret obtained from your Adobe Commerce API credentials. This is used in conjunction with the consumer key for OAuth 1.0a authentication. This is highly sensitive and must be kept secure.
-    - **Type:** String
-    - **Example `.env` entry:**
-      ```
-      COMMERCE_CONSUMER_SECRET=your_commerce_consumer_secret
-      ```
+  - **Description:** The consumer secret obtained from your Adobe Commerce API credentials. This is used in conjunction with the consumer key for OAuth 1.0a authentication. This is highly sensitive and must be kept secure.
+  - **Type:** String
+  - **Example `.env` entry:**
+    ```
+    COMMERCE_CONSUMER_SECRET=your_commerce_consumer_secret
+    ```
 
 - `COMMERCE_ACCESS_TOKEN`
-
-    - **Description:** The access token obtained after authorizing your application with Adobe Commerce. This token is used to make authenticated API requests. This is highly sensitive and must be kept secure.
-    - **Type:** String
-    - **Example `.env` entry:**
-      ```
-      COMMERCE_ACCESS_TOKEN=your_commerce_access_token
-      ```
+  - **Description:** The access token obtained after authorizing your application with Adobe Commerce. This token is used to make authenticated API requests. This is highly sensitive and must be kept secure.
+  - **Type:** String
+  - **Example `.env` entry:**
+    ```
+    COMMERCE_ACCESS_TOKEN=your_commerce_access_token
+    ```
 
 - `COMMERCE_ACCESS_TOKEN_SECRET`
-
-    - **Description:** The access token secret obtained alongside the access token during the OAuth 1.0a authentication process with Adobe Commerce. This is highly sensitive and must be kept secure.
-    - **Type:** String
-    - **Example `.env` entry:**
-      ```
-      COMMERCE_ACCESS_TOKEN_SECRET=your_commerce_access_token_secret
-      ```
-
-
-
-- `ADOBE_COMMERCE_INTEGRATION_TOKEN`
-  - **Description:** A secure authentication token (e.g., an integration token created in Adobe Commerce) with permissions to read system configurations from your Adobe Commerce instance. This allows the App Builder action to fetch the ShipStation settings configured by the merchant. This is highly sensitive and must be kept secure.
-
+  - **Description:** The access token secret obtained alongside the access token during the OAuth 1.0a authentication process with Adobe Commerce. This is highly sensitive and must be kept secure.
   - **Type:** String
-
   - **Example `.env` entry:**
-
     ```
-    ADOBE_COMMERCE_INTEGRATION_TOKEN=your_adobe_commerce_api_token
+    COMMERCE_ACCESS_TOKEN_SECRET=your_commerce_access_token_secret
     ```
 
 ### Shipstation Environment Configuration
