@@ -1,1 +1,3 @@
-This application doesn't have any deployable EDS block and rely entirely onto native Adobe Commerce shipping functionalities.
+The shipping carrier by this application will be available through the existing
+Commerce GraphQL and is compatible with EDS Checkout Drop-in: https://experienceleague.adobe.com/developer/commerce/storefront
+/dropins/checkout/containers/shipping-methods/

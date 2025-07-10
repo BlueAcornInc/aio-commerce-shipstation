@@ -19,12 +19,11 @@ This Adobe App Builder extension provides a secure and efficient way for Adobe C
 
 ## Features
 
-- **Secure Credential Storage:** ShipStation credentials are stored securely within your Adobe Commerce backend, which the App Builder application can then securely retrieve at runtime.
-- **Frontend/Backend API Access:** The App Builder application exposes secure API endpoints for your frontend or backend to retrieve necessary ShipStation credentials and configuration, enabling interaction with ShipStation services (e.g., order syncing, label creation).
+- **Secure Credential Storage:** ShipStation credentials are stored securely encrypted in Adobe I/O file system
+- **Frontend/Backend API Access:** The App Builder application exposes secure API endpoints for the backend to retrieve necessary ShipStation credentials and configuration, enabling interaction with ShipStation services (e.g., order syncing, label creation).
 - **Centralized Configuration:** All ShipStation-specific settings are managed by the merchant directly within the familiar Adobe Commerce Admin Panel UI.
 - **Easy Integration:** Designed for quick and straightforward deployment as an App Builder application.
 - **Adobe App Builder Powered:** Leveraging the power and scalability of Adobe App Builder for reliable performance and easy deployment.
-- **Marketplace Ready:** Compatible with Adobe Exchange for effortless installation and updates.
 
 ---
 
@@ -32,25 +31,41 @@ This Adobe App Builder extension provides a secure and efficient way for Adobe C
 
 Before installing this extension, ensure you have the following:
 
-- **Adobe Commerce (Cloud, SaaS or On-Premise):** Version 2.4.x or higher.
+- **Adobe Commerce (Cloud, SaaS or On-Premise):** Version 2.4.5 or higher.
 
 - **Adobe Developer App Builder Project:** An active App Builder project configured for your Adobe Commerce instance's organization.
 
 - **ShipStation Account:** A valid ShipStation account with API access credentials (API Key and API Secret).
 
-- **Node.js and npm/yarn:** For local development and testing of the App Builder application.
+- **Node.js and npm/yarn:** For local development and testing of the App Builder application, node version 22 or higher is required.
 
-- **Adobe I/O CLI:** For deploying App Builder actions.
+- **Adobe I/O CLI:** For deploying App Builder actions. [See](https://developer.adobe.com/app-builder/docs/guides/runtime_guides/tools/cli-install)
 
-- **Admin SDK Module:** The `magento/commerce-backend-sdk` module must be installed in your Adobe Commerce `composer.json`. Add the following line to your `composer.json` under the `require` section:
-
-  ```json
-  "magento/commerce-backend-sdk": "3.0.0"
-  ```
-
-  After adding, run `composer update`.
+- **AppBuilder license**: Access to the [Adobe Developer Console](https://console.adobe.io/) with an App Builder license.
 
 - **IMS Authentication:** Ensure IMS (Identity Management System) authentication is configured and working on your Adobe Commerce instance, as this is typically used for secure API communication with Adobe services, including App Builder actions.
+
+- **Install Adobe Commerce Modules (PaaS only)**
+  - Install the required modules for the ShipStation extension :
+
+    ```bash
+    composer require magento/module-out-of-process-shipping-methods --with-dependencies
+    ```
+
+  - For Commerce Webhook, refer to the [Install Adobe Commerce Webhooks](https://developer.adobe.com/commerce/extensibility/webhooks/installation/)
+
+  - Update Commerce Eventing module to version `1.10.0` or higher:
+
+    ```bash
+    composer show magento/commerce-eventing
+    composer update magento/commerce-eventing --with-dependencies
+    ```
+
+  - Complete the [Admin UI SDK installation process](https://developer.adobe.com/commerce/extensibility/admin-ui-sdk/installation/) and install version `3.0.0` or higher:
+
+    ```bash
+    composer require "magento/commerce-backend-sdk": ">=3.0"
+    ```
 
 ---
 
@@ -142,7 +157,7 @@ For **local development**, these are typically set in your `.env` file within yo
     ENCRYPTION_IV=f1e2d3c4b5a69876543210fedcba9876
     ```
 
-- `ADOBE_COMMERCE_API_URL`
+- `COMMERCE_BASE_URL`
   - **Description:** The base URL of your Adobe Commerce instance's API (e.g., `https://your-magento-store.com/graphql` or `https://your-magento-store.com/rest/V1`). The App Builder action will use this to securely retrieve the ShipStation configuration settings from your Commerce backend.
 
   - **Type:** String
@@ -150,8 +165,47 @@ For **local development**, these are typically set in your `.env` file within yo
   - **Example `.env` entry:**
 
     ```
-    ADOBE_COMMERCE_API_URL=https://your-magento-store.com/graphql
+    COMMERCE_BASE_URL=https://your-magento-store.com/graphql
     ```
+
+
+- `COMMERCE_CONSUMER_KEY`
+
+    - **Description:** The consumer key obtained from your Adobe Commerce API credentials. This is used for OAuth 1.0a authentication with the Adobe Commerce API. This is highly sensitive and must be kept secure.
+    - **Type:** String
+    - **Example `.env` entry:**
+      ```
+      COMMERCE_CONSUMER_KEY=your_commerce_consumer_key
+      ```
+
+- `COMMERCE_CONSUMER_SECRET`
+
+    - **Description:** The consumer secret obtained from your Adobe Commerce API credentials. This is used in conjunction with the consumer key for OAuth 1.0a authentication. This is highly sensitive and must be kept secure.
+    - **Type:** String
+    - **Example `.env` entry:**
+      ```
+      COMMERCE_CONSUMER_SECRET=your_commerce_consumer_secret
+      ```
+
+- `COMMERCE_ACCESS_TOKEN`
+
+    - **Description:** The access token obtained after authorizing your application with Adobe Commerce. This token is used to make authenticated API requests. This is highly sensitive and must be kept secure.
+    - **Type:** String
+    - **Example `.env` entry:**
+      ```
+      COMMERCE_ACCESS_TOKEN=your_commerce_access_token
+      ```
+
+- `COMMERCE_ACCESS_TOKEN_SECRET`
+
+    - **Description:** The access token secret obtained alongside the access token during the OAuth 1.0a authentication process with Adobe Commerce. This is highly sensitive and must be kept secure.
+    - **Type:** String
+    - **Example `.env` entry:**
+      ```
+      COMMERCE_ACCESS_TOKEN_SECRET=your_commerce_access_token_secret
+      ```
+
+
 
 - `ADOBE_COMMERCE_INTEGRATION_TOKEN`
   - **Description:** A secure authentication token (e.g., an integration token created in Adobe Commerce) with permissions to read system configurations from your Adobe Commerce instance. This allows the App Builder action to fetch the ShipStation settings configured by the merchant. This is highly sensitive and must be kept secure.
