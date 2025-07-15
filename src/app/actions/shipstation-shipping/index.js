@@ -2,6 +2,10 @@
 const { Core } = require("@adobe/aio-sdk");
 const fetch = require("node-fetch");
 const { readConfiguration } = require("../../../shared/configurationHelper");
+const {
+  webhookVerify,
+  webhookErrorResponse,
+} = require("../../../../lib/adobe-commerce");
 
 /**
  *
@@ -74,6 +78,13 @@ async function main(params) {
   try {
     if (!params.__ow_body) {
       return singleErrorMethod("No Payload Received");
+    }
+
+    const { success, error } = webhookVerify(params);
+    if (!success) {
+      return webhookErrorResponse(
+        `Failed to verify the webhook signature: ${error}`,
+      );
     }
 
     let payload;

@@ -54,13 +54,6 @@ Before installing this extension, ensure you have the following:
 
   - For Commerce Webhook, refer to the [Install Adobe Commerce Webhooks](https://developer.adobe.com/commerce/extensibility/webhooks/installation/)
 
-  - Update Commerce Eventing module to version `1.10.0` or higher:
-
-    ```bash
-    composer show magento/commerce-eventing
-    composer update magento/commerce-eventing --with-dependencies
-    ```
-
   - Complete the [Admin UI SDK installation process](https://developer.adobe.com/commerce/extensibility/admin-ui-sdk/installation/) and install version `3.0.0` or higher:
 
     ```bash
@@ -118,6 +111,48 @@ All ShipStation-specific configurations for this extension are managed by the me
       _(Add any other ShipStation-specific configurations your extension supports, e.g., default warehouse, order status mapping, etc.)_
 3.  **Save Configuration:** Click "**Save Config**" to apply your changes in Adobe Commerce.
 4.  **Verify Functionality:** After configuration, test your integration to ensure the App Builder app is correctly retrieving and utilizing the ShipStation settings for order syncing and fulfillment.
+
+### Configure Webhooks
+
+#### Prepare Webhook Signature
+
+1. In Adobe Commerce, go to **Stores > Settings > Configuration > Adobe Services > Webhooks**
+1. Enable **Digital Signature Configuration** and click **Regenerate Key Pair**
+1. Add the generated **Public Key** to your `.env` as [the same format](https://developer.adobe.com/commerce/extensibility/webhooks/signature-verification/#verify-the-signature-in-the-app-builder-action):
+
+   ```env
+   COMMERCE_WEBHOOKS_PUBLIC_KEY="-----BEGIN PUBLIC KEY-----
+   XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+   -----END PUBLIC KEY-----"
+   ```
+
+#### Create Webhooks
+
+After deploying your App Builder actions, [create the webhooks](https://developer.adobe.com/commerce/extensibility/webhooks/create-webhooks/) with the following actions:
+
+
+1. `get-rates`: This action get shipping rates for the cart.
+
+   - For SaaS, register your action to `plugin.magento.out_of_process_shipping_methods.api.shipping_rate_repository.get_rates` webhook method in **System > Webhooks > Webhooks Subscriptions**.
+   - For PaaS, please refer to `webhooks.xml`. Replace the app builder URL with your action after deploying the App Builder application.
+
+     ```xml
+     <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_AdobeCommerceWebhooks:etc/webhooks.xsd">
+        <method name="plugin.magento.out_of_process_shipping_methods.api.shipping_rate_repository.get_rates" type="after">
+        <hooks>
+            <batch name="dps">
+                <hook name="add_shipping_rates_shipstation" url="https://<your_app_builder>.runtime.adobe.io/api/v1/web/aio-commerce-shipstation-app/shipstation-shipping" method="POST" timeout="5000" softTimeout="1000" priority="100" required="true">
+                    <fields>
+                        <field name="rateRequest" />
+                    </fields>
+                </hook>
+            </batch>
+        </hooks>
+    </method>
+
+     </config>
+     ```
 
 ---
 
@@ -212,15 +247,6 @@ You can generate this file using the command `aio app use`.
 ## please provide your Adobe I/O Runtime credentials
 # AIO_RUNTIME_AUTH=
 # AIO_RUNTIME_NAMESPACE=
-# SHIPSTATION_API_KEY=123abcxyz
-# SHIPSTATION_CARRIER_IDS=se-1941419,se-1941420
-# SHIPSTATION_WAREHOUSE_NAME=Acme Warehouse
-# SHIPSTATION_WAREHOUSE_PHONE=999-999-9999
-# SHIPSTATION_WAREHOUSE_ADDRESS_LINE1=999 Vegas Ave
-# SHIPSTATION_WAREHOUSE_CITY=Las Vegas
-# SHIPSTATION_WAREHOUSE_REGION=NV
-# SHIPSTATION_WAREHOUSE_POSTCODE=89100
-# SHIPSTATION_WAREHOUSE_COUNTRY=US
 
 ```
 
