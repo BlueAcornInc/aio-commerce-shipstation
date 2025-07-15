@@ -1,4 +1,4 @@
-# ShipStation by Blue Acorn
+# ShipStation Integration for Adobe Commerce by Blue Acorn
 
 This Adobe App Builder extension provides a secure and efficient way for Adobe Commerce merchants to store and consume their ShipStation credentials. All configurations, including sensitive credentials, are managed directly within the Adobe Commerce Admin backend. The App Builder application securely retrieves these settings and makes them available to your storefront via API, enabling order fulfillment, shipping label generation, and integration with ShipStation services.
 
@@ -7,7 +7,7 @@ This Adobe App Builder extension provides a secure and efficient way for Adobe C
 - [Features](#features)
 - [Requirements](#requirements)
 - [Installation](#installation)
-  - [Downloading the latest release](#downloading-the-latest-release)
+- [Downloading the latest release](#downloading-the-latest-release)
 - [Configuration (Adobe Commerce Backend)](#configuration-adobe-commerce-backend)
 - [Environment Variables (App Builder Operational)](#environment-variables-app-builder-operational)
 - [Usage](#usage)
@@ -37,28 +37,53 @@ Before installing this extension, ensure you have the following:
 
 - **ShipStation Account:** A valid ShipStation account with API access credentials (API Key and API Secret).
 
-- **Node.js and npm/yarn:** For local development and testing of the App Builder application, node version 22 or higher is required.
+- **Node.js and npm/yarn:** For local development and testing of the App Builder application, Node.js version 22 or higher is required.
 
-- **Adobe I/O CLI:** For deploying App Builder actions. [See](https://developer.adobe.com/app-builder/docs/guides/runtime_guides/tools/cli-install)
+- **Adobe I/O CLI:** For deploying App Builder actions. [See installation guide](https://developer.adobe.com/app-builder/docs/guides/runtime_guides/tools/cli-install).
 
 - **AppBuilder license**: Access to the [Adobe Developer Console](https://console.adobe.io/) with an App Builder license.
 
-- **IMS Authentication:** Ensure IMS (Identity Management System) authentication is configured and working on your Adobe Commerce instance, as this is typically used for secure API communication with Adobe services, including App Builder actions.
+- **IMS Authentication:** Ensure IMS (Identity Management System) authentication is configured and working on your Adobe Commerce instance.
 
 - **Install Adobe Commerce Modules (PaaS only)**
-  - Install the required modules for the ShipStation extension :
+  - Install the required modules for the ShipStation extension:
 
     ```bash
     composer require magento/module-out-of-process-shipping-methods --with-dependencies
     ```
 
-  - For Commerce Webhook, refer to the [Install Adobe Commerce Webhooks](https://developer.adobe.com/commerce/extensibility/webhooks/installation/)
+  - For Commerce Webhooks, refer to the [Install Adobe Commerce Webhooks](https://developer.adobe.com/commerce/extensibility/webhooks/installation/).
 
   - Complete the [Admin UI SDK installation process](https://developer.adobe.com/commerce/extensibility/admin-ui-sdk/installation/) and install version `3.0.0` or higher:
 
     ```bash
     composer require "magento/commerce-backend-sdk": ">=3.0"
     ```
+
+- **Adobe I/O Credentials (OAuth Server-to-Server)**
+
+  Your App Builder application requires OAuth Server-to-Server credentials to securely authenticate and interact with Adobe Commerce APIs. You must generate these credentials from the Adobe Developer Console.
+  1.  **Log in to the Adobe Developer Console:** Navigate to [https://console.adobe.io/](https://console.adobe.io/).
+
+  2.  **Select Your Project:** Open the App Builder project that you have created for this integration.
+
+  3.  **Add Server-to-Server Credentials:**
+      - In your project overview, click on the **Add service** button and select **API**.
+      - In the "Add an API" window, select **Adobe Commerce** and click **Next**.
+      - Choose **Server-to-Server** as the authentication type. You will be prompted to give the credential a name (e.g., "ShipStation Integration Creds").
+      - **Important:** On the "Configure API" screen, you must select the appropriate scopes. Choose **`Adobe_Commerce_API`** to grant the necessary permissions for the application to access Commerce data.
+      - Click **Save configured API**.
+
+  4.  **Retrieve Your Credentials:**
+      - Once saved, you will be presented with the credential details.
+      - **Copy the following values** and keep them in a secure location. You will need them to configure your environment variables in the next steps.
+        - **Client ID**
+        - **Client Secret**
+        - **Technical account ID**
+        - **Technical account email**
+        - **Organization ID**
+
+  You will use these values for the `OAUTH_*` environment variables described in the [Environment Variables](#environment-variables-app-builder-operational) section.
 
 ---
 
@@ -130,29 +155,27 @@ All ShipStation-specific configurations for this extension are managed by the me
 
 After deploying your App Builder actions, [create the webhooks](https://developer.adobe.com/commerce/extensibility/webhooks/create-webhooks/) with the following actions:
 
+1.  `shipstation-shipping`: This action gets shipping rates for the cart.
+    - **For SaaS:** Register your action to `plugin.magento.out_of_process_shipping_methods.api.shipping_rate_repository.get_rates` webhook method in **System \> Webhooks \> Webhooks Subscriptions**.
 
-1. `get-rates`: This action get shipping rates for the cart.
+    - **For PaaS:** Refer to `webhooks.xml`. Replace the placeholder URL with the actual URL of your deployed action.
 
-   - For SaaS, register your action to `plugin.magento.out_of_process_shipping_methods.api.shipping_rate_repository.get_rates` webhook method in **System > Webhooks > Webhooks Subscriptions**.
-   - For PaaS, please refer to `webhooks.xml`. Replace the app builder URL with your action after deploying the App Builder application.
-
-     ```xml
-     <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-             xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_AdobeCommerceWebhooks:etc/webhooks.xsd">
-        <method name="plugin.magento.out_of_process_shipping_methods.api.shipping_rate_repository.get_rates" type="after">
-        <hooks>
-            <batch name="dps">
-                <hook name="add_shipping_rates_shipstation" url="https://<your_app_builder>.runtime.adobe.io/api/v1/web/aio-commerce-shipstation-app/shipstation-shipping" method="POST" timeout="5000" softTimeout="1000" priority="100" required="true">
-                    <fields>
-                        <field name="rateRequest" />
-                    </fields>
-                </hook>
-            </batch>
-        </hooks>
-    </method>
-
-     </config>
-     ```
+      ```xml
+      <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_AdobeCommerceWebhooks:etc/webhooks.xsd">
+         <method name="plugin.magento.out_of_process_shipping_methods.api.shipping_rate_repository.get_rates" type="after">
+             <hooks>
+                 <batch name="shipstation">
+                     <hook name="add_shipping_rates_shipstation" url="https://<your_app_builder>.runtime.adobe.io/api/v1/web/aio-commerce-shipstation-app/shipstation-shipping" method="POST" timeout="5000" softTimeout="1000" priority="100" required="true">
+                         <fields>
+                             <field name="rateRequest" />
+                         </fields>
+                     </hook>
+                 </batch>
+             </hooks>
+         </method>
+      </config>
+      ```
 
 ---
 
@@ -203,65 +226,52 @@ For **local development**, these are typically set in your `.env` file within yo
     COMMERCE_BASE_URL=https://your-magento-store.com/graphql
     ```
 
-- `COMMERCE_CONSUMER_KEY`
-  - **Description:** The consumer key obtained from your Adobe Commerce API credentials. This is used for OAuth 1.0a authentication with the Adobe Commerce API. This is highly sensitive and must be kept secure.
-  - **Type:** String
-  - **Example `.env` entry:**
-    ```
-    COMMERCE_CONSUMER_KEY=your_commerce_consumer_key
-    ```
+- `COMMERCE_WEBHOOKS_PUBLIC_KEY`
+  - **Description:** The public key generated in the Commerce Admin to verify webhook signatures.
 
-- `COMMERCE_CONSUMER_SECRET`
-  - **Description:** The consumer secret obtained from your Adobe Commerce API credentials. This is used in conjunction with the consumer key for OAuth 1.0a authentication. This is highly sensitive and must be kept secure.
-  - **Type:** String
-  - **Example `.env` entry:**
-    ```
-    COMMERCE_CONSUMER_SECRET=your_commerce_consumer_secret
-    ```
+### IMS OAuth Server-to-Server Credentials
 
-- `COMMERCE_ACCESS_TOKEN`
-  - **Description:** The access token obtained after authorizing your application with Adobe Commerce. This token is used to make authenticated API requests. This is highly sensitive and must be kept secure.
-  - **Type:** String
-  - **Example `.env` entry:**
-    ```
-    COMMERCE_ACCESS_TOKEN=your_commerce_access_token
-    ```
+These are the credentials you generated in the [Requirements](#requirements) Adobe I/O Credentials (OAuth Server-to-Server) section.
 
-- `COMMERCE_ACCESS_TOKEN_SECRET`
-  - **Description:** The access token secret obtained alongside the access token during the OAuth 1.0a authentication process with Adobe Commerce. This is highly sensitive and must be kept secure.
-  - **Type:** String
-  - **Example `.env` entry:**
-    ```
-    COMMERCE_ACCESS_TOKEN_SECRET=your_commerce_access_token_secret
-    ```
+- `OAUTH_CLIENT_ID`
+  - **Description:** The Client ID for your Server-to-Server credential.
+- `OAUTH_CLIENT_SECRETS`
+  - **Description:** The Client Secret for your Server-to-Server credential.
+- `OAUTH_TECHNICAL_ACCOUNT_ID`
+  - **Description:** The Technical account ID for your Server-to-Server credential.
+- `OAUTH_TECHNICAL_ACCOUNT_EMAIL`
+  - **Description:** The Technical account email for your Server-to-Server credential.
+- `OAUTH_SCOPES`
+  - **Description:** The API scopes your application is authorized for. Should be `Adobe_Commerce_API`.
+- `OAUTH_IMS_ORG_ID`
+  - **Description:** Your Adobe IMS Organization ID.
 
-### Shipstation Environment Configuration
+**Example `.env` file structure:**
 
-To configure this application, be sure that the following environment variables are configured. This can either be done pre-deployment with the `.env` file in this repo, or configured in App Builder as part of the App installation process.
+```env
+# This file must not be committed to source control
+# Internal Encryption
+ENCRYPTION_KEY=...
+ENCRYPTION_IV=...
 
-You can generate this file using the command `aio app use`.
+# Adobe Commerce Connection
+COMMERCE_BASE_URL=https://mystore.com/rest/all
+COMMERCE_WEBHOOKS_PUBLIC_KEY="-----BEGIN PUBLIC KEY-----..."
 
-```bash
-# This file must **not** be committed to source control
-
-## please provide your Adobe I/O Runtime credentials
-# AIO_RUNTIME_AUTH=
-# AIO_RUNTIME_NAMESPACE=
-
+# IMS OAuth Server-to-Server Credentials
+OAUTH_CLIENT_ID=...
+OAUTH_CLIENT_SECRETS=...
+OAUTH_TECHNICAL_ACCOUNT_ID=...
+OAUTH_TECHNICAL_ACCOUNT_EMAIL=...
+OAUTH_SCOPES=Adobe_Commerce_API
+OAUTH_IMS_ORG_ID=...
 ```
-
-`aio app use` does not add these SHIPSTATION\_ prefixed variables and must be added manually.
-
-**Important Notes:**
-
-- **Security:** It's crucial to generate strong, unique values for `ENCRYPTION_KEY`, `ENCRYPTION_IV`. Don't use example values in production environments.
-- **Don't Commit `.env`:** If you're using a `.env` file for local development, **DO NOT commit it to your version control system (e.g., Git)**. Add `.env` to your `.gitignore` file to prevent accidental exposure of sensitive information.
 
 ---
 
 ## Usage
 
-Once the App Builder application is deployed and its settings are configured in the Adobe Commerce backend, this shipping method will then be able to be used as a regular shipping method.
+Once the App Builder application is deployed and configured, ShipStation will be available as a shipping method during the checkout process in Adobe Commerce, using the rates and logic defined in your actions.
 
 ---
 
