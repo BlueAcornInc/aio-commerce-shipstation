@@ -68,9 +68,9 @@ export default function ShipstationConfigForm(props) {
 
   return (
     <View padding="size-250">
-      {DEBUG && statusMsg && (
+      {DEBUG && loadStatusMsg && (
         <Content marginBottom="size-200" UNSAFE_style={{ color: "#d2691e" }}>
-          {statusMsg}
+          {loadStatusMsgs}
         </Content>
       )}
       <Form maxWidth="size-6000">
@@ -83,71 +83,71 @@ export default function ShipstationConfigForm(props) {
           value={formState.apiKey}
           onChange={(val) => handleChange("apiKey", val)}
           isRequired
-          isDisabled={hasError}
+          isDisabled={loadHasError}
         />
         <TextField
           label="Carrier IDs (comma separated)"
           value={formState.carrierIds}
           onChange={(val) => handleChange("carrierIds", val)}
           isRequired
-          isDisabled={hasError}
+          isDisabled={loadHasError}
         />
         <TextField
           label="Warehouse Name"
           value={formState.warehouseName}
           onChange={(val) => handleChange("warehouseName", val)}
-          isDisabled={hasError}
+          isDisabled={loadHasError}
         />
         <TextField
           label="Warehouse Phone"
           value={formState.warehousePhone}
           onChange={(val) => handleChange("warehousePhone", val)}
-          isDisabled={hasError}
+          isDisabled={loadHasError}
         />
         <TextField
           label="Warehouse Address"
           value={formState.warehouseAddressLine1}
           onChange={(val) => handleChange("warehouseAddressLine1", val)}
-          isDisabled={hasError}
+          isDisabled={loadHasError}
         />
         <TextField
           label="Warehouse City"
           value={formState.warehouseCity}
           onChange={(val) => handleChange("warehouseCity", val)}
-          isDisabled={hasError}
+          isDisabled={loadHasError}
         />
         <TextField
           label="Warehouse State/Province"
           value={formState.warehouseState}
           onChange={(val) => handleChange("warehouseState", val)}
-          isDisabled={hasError}
+          isDisabled={loadHasError}
         />
         <TextField
           label="Warehouse Postcode"
           value={formState.warehousePostcode}
           onChange={(val) => handleChange("warehousePostcode", val)}
-          isDisabled={hasError}
+          isDisabled={loadHasError}
         />
         <TextField
           label="Warehouse Country"
           value={formState.warehouseCountry}
           onChange={(val) => handleChange("warehouseCountry", val)}
-          isDisabled={hasError}
+          isDisabled={loadHasError}
         />
         <TextField
           label="Ship-To Name (optional)"
           value={formState.shipToName}
           onChange={(val) => handleChange("shipToName", val)}
-          isDisabled={hasError}
+          isDisabled={loadHasError}
         />
         <TextField
           label="Ship-To Phone (optional)"
           value={formState.shipToPhone}
           onChange={(val) => handleChange("shipToPhone", val)}
-          isDisabled={hasError}
+          isDisabled={loadHasError}
         />
 
-        <Button variant="accent" onPress={handleSave} isDisabled={hasError}>
+        <Button variant="accent" onPress={handleSave} isDisabled={saveHasError}>
           Save
         </Button>
 
