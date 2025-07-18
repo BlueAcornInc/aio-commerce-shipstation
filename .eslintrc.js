@@ -42,13 +42,15 @@ module.exports = {
       },
     },
     {
-      files: ["web-src/**/*.js", "web-src/**/*.jsx"],
+      files: ["**/web-src/**/*.js", "**/web-src/**/*.jsx"],
       env: {
         browser: true,
         node: false,
       },
       parser: "@babel/eslint-parser",
       parserOptions: {
+        ecmaVersion: "latest",
+        sourceType: "module",
         ecmaFeatures: {
           jsx: true,
         },
@@ -66,7 +68,7 @@ module.exports = {
         // 'plugin:prettier/recommended' is already in the base extends,
         // so it will apply to overrides too, unless you specifically add more extends after it here.
       ],
-      plugins: ["react", "react-hooks", "jsx-a11y"],
+      plugins: ["react", "react-hooks", "jsx-a11y", "jsx"],
       rules: {
         "react/prop-types": "off",
         "react/react-in-jsx-scope": "off",
