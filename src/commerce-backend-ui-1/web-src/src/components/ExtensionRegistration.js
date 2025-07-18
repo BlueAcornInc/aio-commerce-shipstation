@@ -15,12 +15,11 @@ import { EXTENSION_ID } from "../constants";
 import { useEffect } from "react";
 
 export default function ExtensionRegistration(props) {
-
   useEffect(() => {
     // Initialize the extension registration when the component mounts
     init().catch(console.error);
   }, []);
-  
+
   return <MainPage runtime={props.runtime} ims={props.ims} />;
 }
 
