@@ -7,7 +7,7 @@ This Adobe App Builder extension provides a secure and efficient way for Adobe C
 - [Features](#features)
 - [Requirements](#requirements)
 - [Installation](#installation)
-- [Downloading the latest release](#downloading-the-latest-release)
+  - [Downloading the latest release](#downloading-the-latest-release)
 - [Configuration (Adobe Commerce Backend)](#configuration-adobe-commerce-backend)
 - [Environment Variables (App Builder Operational)](#environment-variables-app-builder-operational)
 - [Usage](#usage)
@@ -132,8 +132,16 @@ All ShipStation-specific configurations for this extension are managed by the me
 2.  **Configure ShipStation Settings:** Fill in the following details using information provided by ShipStation:
     - **Enable/Disable ShipStation Extension:** Select Yes or No to activate or deactivate the integration's functionality.
     - **ShipStation API Key:** Your ShipStation API Key.
-    - **ShipStation API Secret:** Your ShipStation API Secret.
-      _(Add any other ShipStation-specific configurations your extension supports, e.g., default warehouse, order status mapping, etc.)_
+    - **Carrier IDs:** (Required) Provide a comma-separated list of the carrier IDs you want to use (e.g., `se-12345,se-67890`).
+    - **Warehouse Name:** The name of your origin warehouse.
+    - **Warehouse Phone:** The phone number for the origin warehouse.
+    - **Warehouse Address:** The street address line for the origin warehouse.
+    - **Warehouse City:** The city for the origin warehouse.
+    - **Warehouse State/Province:** The state or province for the origin warehouse (e.g., TX, QC).
+    - **Warehouse Postcode:** The postal or ZIP code for the origin warehouse.
+    - **Warehouse Country:** The country for the origin warehouse (e.g., US, CA).
+    - **Ship-To Name (optional):** A default name for the recipient if one isn't provided by the order.
+    - **Ship-To Phone (optional):** A default phone number for the recipient.
 3.  **Save Configuration:** Click "**Save Config**" to apply your changes in Adobe Commerce.
 4.  **Verify Functionality:** After configuration, test your integration to ensure the App Builder app is correctly retrieving and utilizing the ShipStation settings for order syncing and fulfillment.
 
@@ -183,7 +191,7 @@ After deploying your App Builder actions, [create the webhooks](https://develope
 
 These environment variables are crucial for the **operational functioning and security of the Adobe App Builder application itself**. They allow the App Builder to connect to your Adobe Commerce instance and perform internal data protection. These are **not** the ShipStation-specific settings for your store, which are configured in the Adobe Commerce Admin.
 
-For **local development**, these are typically set in your `.env` file within your App Builder project. For **deployed environments (e.g., via Adobe Exchange Marketplace or CI/CD)**, these variables are configured directly within the Adobe Developer Console UI for your specific App Builder workspace/action, or provided via marketplace prompts during installation.
+For **local development**, these are typically set in your `.env` file within your App Builder project.
 
 - `ENCRYPTION_KEY`
   - **Description:** A 32-byte (64-character hexadecimal string) key used by the App Builder application for internal encryption operations, such as protecting sensitive configuration data retrieved from Adobe Commerce before processing or transmitting to the frontend.
