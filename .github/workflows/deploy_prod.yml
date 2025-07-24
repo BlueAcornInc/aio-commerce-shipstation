@@ -98,9 +98,7 @@ jobs:
           aio console workspace select ${{ vars.AIO_PROJECT_WORKSPACE_ID_PROD }}
           aio app use --global --no-input || true
           aio api-mesh update -c .github/config/mesh.json || true
-          sudo chmod -R u+rwX dist
-          rm -rf dist
-          mkdir -p dist
+          sudo rm -rf dist
 
           aio app pack
           mv dist/app.zip dist/${{ vars.AIO_PROJECT_ID_PROD }}-${{ github.ref_name }}.zip
