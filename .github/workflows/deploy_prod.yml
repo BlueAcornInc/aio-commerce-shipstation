@@ -98,7 +98,9 @@ jobs:
           aio console workspace select ${{ vars.AIO_PROJECT_WORKSPACE_ID_PROD }}
           aio app use --global --no-input || true
           aio api-mesh update -c .github/config/mesh.json || true
-          mkdir -p dist/
+          rm -rf dist
+          mkdir -p dist
+          chmod -R 777 dist
           aio app pack
         env:
           AIO_RUNTIME_NAMESPACE: ${{ vars.AIO_RUNTIME_NAMESPACE_PROD }}
