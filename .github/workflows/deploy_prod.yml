@@ -96,7 +96,7 @@ jobs:
           aio console org select ${{ vars.AIO_PROJECT_ORG_ID_PROD }}
           aio console project select ${{ vars.AIO_PROJECT_ID_PROD }}
           aio console workspace select ${{ vars.AIO_PROJECT_WORKSPACE_ID_PROD }}
-          aio app use --global --merge
+          aio app use --global --no-input || true
           aio api-mesh update -c .github/config/mesh.json || true
           mkdir -p dist/
           aio app pack
