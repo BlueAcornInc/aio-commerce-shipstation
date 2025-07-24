@@ -90,3 +90,13 @@ jobs:
         with:
           os: ${{ matrix.os }}
           command: deploy
+      - name: Mesh Deployment (Required to Pack)
+        run: aio api-mesh update -c mesh.json
+      - name: Pack (generate dist/app.zip)
+        run: aio app pack
+      - name: Upload app.zip to GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: dist/app.zip
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
