@@ -123,7 +123,7 @@ export default function ShipstationConfigForm(props) {
           isDisabled={loadHasError}
         />
         <TextField
-          label="Warehouse Postcode"
+          label="Warehouse Postal Code"
           value={formState.warehousePostalCode}
           onChange={(val) => handleChange("warehousePostalCode", val)}
           isDisabled={loadHasError}
