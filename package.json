@@ -62,6 +62,7 @@
     "code:check": "npm run format:check && npm run lint:check",
     "code:fix": "npm run format:fix && npm run lint:fix",
     "create-shipping-carriers": "node -e \"require('./scripts/create-shipping-carriers').main('shipping-carriers.yaml')\"",
+    "sync-oauth-credentials": "node -e \"require('./scripts/sync-oauth-credentials').main()\"",
     "prepare": "husky"
   },
   "engines": {

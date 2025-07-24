@@ -80,15 +80,15 @@ export default function ShipstationConfigForm(props) {
 
         <TextField
           label="API Key"
-          value={formState.apiKey}
-          onChange={(val) => handleChange("apiKey", val)}
+          value={formState.shipstationApiKey}
+          onChange={(val) => handleChange("shipstationApiKey", val)}
           isRequired
           isDisabled={loadHasError}
         />
         <TextField
           label="Carrier IDs (comma separated)"
-          value={formState.carrierIds}
-          onChange={(val) => handleChange("carrierIds", val)}
+          value={formState.shipstationCarrierIds}
+          onChange={(val) => handleChange("shipstationCarrierIds", val)}
           isRequired
           isDisabled={loadHasError}
         />
@@ -112,26 +112,26 @@ export default function ShipstationConfigForm(props) {
         />
         <TextField
           label="Warehouse City"
-          value={formState.warehouseCity}
-          onChange={(val) => handleChange("warehouseCity", val)}
+          value={formState.warehouseCityLocality}
+          onChange={(val) => handleChange("warehouseCityLocality", val)}
           isDisabled={loadHasError}
         />
         <TextField
           label="Warehouse State/Province"
-          value={formState.warehouseState}
-          onChange={(val) => handleChange("warehouseState", val)}
+          value={formState.warehouseStateProvince}
+          onChange={(val) => handleChange("warehouseStateProvince", val)}
           isDisabled={loadHasError}
         />
         <TextField
-          label="Warehouse Postcode"
-          value={formState.warehousePostcode}
-          onChange={(val) => handleChange("warehousePostcode", val)}
+          label="Warehouse Postal Code"
+          value={formState.warehousePostalCode}
+          onChange={(val) => handleChange("warehousePostalCode", val)}
           isDisabled={loadHasError}
         />
         <TextField
-          label="Warehouse Country"
-          value={formState.warehouseCountry}
-          onChange={(val) => handleChange("warehouseCountry", val)}
+          label="Warehouse Country Code"
+          value={formState.warehouseCountryCode}
+          onChange={(val) => handleChange("warehouseCountryCode", val)}
           isDisabled={loadHasError}
         />
         <TextField
