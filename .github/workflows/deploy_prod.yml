@@ -91,14 +91,15 @@ jobs:
           os: ${{ matrix.os }}
           command: deploy
       - name: Pack App
-        run: aio plugins:install @adobe/aio-cli-plugin-api-mesh \
-          && aio console org select ${{ vars.AIO_PROJECT_ORG_ID_PROD }} \
-          && aio console project select ${{ vars.AIO_PROJECT_ID_PROD }} \
-          && aio console workspace select ${{ vars.AIO_PROJECT_WORKSPACE_ID_PROD }} \
-          && aio app use \
-          && aio api-mesh update -c mesh.json \
-          && mkdir -p dist/ \
-          && aio app pack
+        run: |
+          aio plugins:install @adobe/aio-cli-plugin-api-mesh \
+          aio console org select ${{ vars.AIO_PROJECT_ORG_ID_PROD }} \
+          aio console project select ${{ vars.AIO_PROJECT_ID_PROD }} \
+          aio console workspace select ${{ vars.AIO_PROJECT_WORKSPACE_ID_PROD }} \
+          aio app use \
+          aio api-mesh update -c mesh.json \
+          mkdir -p dist/ \
+          aio app pack
         env:
           AIO_RUNTIME_NAMESPACE: ${{ vars.AIO_RUNTIME_NAMESPACE_PROD }}
           COMMERCE_ENDPOINT: ${{ vars.COMMERCE_ENDPOINT }}
