@@ -1,4 +1,4 @@
-# ShipStation Integration for Adobe Commerce by Blue Acorn
+# ShipStation by Blue Acorn
 
 This Adobe App Builder extension provides a secure and efficient way for Adobe Commerce merchants to store and consume their ShipStation credentials. All configurations, including sensitive credentials, are managed directly within the Adobe Commerce Admin backend. The App Builder application securely retrieves these settings and makes them available to your storefront via API, enabling order fulfillment, shipping label generation, and integration with ShipStation services.
 
@@ -60,65 +60,105 @@ Before installing this extension, ensure you have the following:
     composer require "magento/commerce-backend-sdk": ">=3.0"
     ```
 
-- **Adobe I/O Credentials (OAuth Server-to-Server)**
-
-  Your App Builder application requires OAuth Server-to-Server credentials to securely authenticate and interact with Adobe Commerce APIs. You must generate these credentials from the Adobe Developer Console.
-  1.  **Log in to the Adobe Developer Console:** Navigate to [https://console.adobe.io/](https://console.adobe.io/).
-
-  2.  **Select Your Project:** Open the App Builder project that you have created for this integration.
-
-  3.  **Add Server-to-Server Credentials:**
-      - In your project overview, click on the **Add service** button and select **API**.
-      - In the "Add an API" window, select **Adobe Commerce** and click **Next**.
-      - Choose **Server-to-Server** as the authentication type. You will be prompted to give the credential a name (e.g., "ShipStation Integration Creds").
-      - **Important:** On the "Configure API" screen, you must select the appropriate scopes. Choose **`Adobe_Commerce_API`** to grant the necessary permissions for the application to access Commerce data.
-      - Click **Save configured API**.
-
-  4.  **Retrieve Your Credentials:**
-      - Once saved, you will be presented with the credential details.
-      - **Copy the following values** and keep them in a secure location. You will need them to configure your environment variables in the next steps.
-        - **Client ID**
-        - **Client Secret**
-        - **Technical account ID**
-        - **Technical account email**
-        - **Organization ID**
-
-  You will use these values for the `OAUTH_*` environment variables described in the [Environment Variables](#environment-variables-app-builder-operational) section.
-
----
-
 ## Installation
 
 You can install this extension either by downloading it directly from the repository or from the Adobe Exchange marketplace.
 
 ### Downloading the latest release
 
-1.  **Download the Extension:** Get the latest release package from the [release page](https://github.com/BlueAcornInc/aio-commerce-shipstation-app/releases).
+1.  **Download the Extension:** Get the latest release package from the [release page](https://github.com/BlueAcornInc/aio-commerce-shipstation/releases).
 
-2.  **Extract the Files:** Unzip the downloaded package to your preferred development directory. This directory contains the Adobe App Builder project.
+1.  **Extract the Files:** Unzip the downloaded package from git to your preferred development directory. This directory contains the Shipstation Adobe App Builder project.
 
-3.  **Configure App Builder Operational Environment Variables:** Before deploying, set the necessary environment variables for your App Builder actions as described in the [Environment Variables (App Builder Operational)](#environment-variables-app-builder-operational) section. These are critical for the App Builder app's ability to communicate with Adobe Commerce and perform internal encryption. You can do this by creating a `.env` file in the root of the extracted App Builder project.
+1.  **Install the packages by running following command:** `npm install`
 
-4.  **Deploy App Builder Actions:**
-    - Navigate to the root directory of the extracted App Builder project (where the `app.json` or `manifest.yml` file is located).
+1.  Copy the environment variables from the env.dist to a local .env file. We will complete the required variables in the upcoming sections.
 
-    - **(Optional) Set App Builder Context:** To avoid interactive prompts during deployment, you can explicitly set your project and workspace using `aio app use`:
+1.  **Configure App Builder Project**
+    - **Create an App Builder project in Developer Console**
+      1. Log in to the [Adobe Developer Console](https://console.adobe.io/) and select the desired organization from the dropdown menu in the top-right corner.
 
-      ```bash
-      aio app use <your-project-id> <your-workspace-name>
-      ```
+      1. Click **Create new project from template**.
 
-      (Replace `<your-project-id>` and `<your-workspace-name>` with your actual values, which you can find in the Adobe Developer Console.)
+      1. Select **App Builder**. The **Set up templated project** page displays.
 
+      1. Specify a project title and app name. Mark the **Include Runtime with each workspace** checkbox.
+
+    - **Initialize App Builder project**
+      1.  Navigate to the downloaded code and run:
+
+          ```bash
+          aio login
+          aio console org select
+          aio console project select
+          aio console workspace select
+          aio app use --merge
+          ```
+
+      1.  Add required services to your project:
+
+          ```bash
+          aio app add service
+          ```
+
+          Select the following from the list:
+          - I/O Management API
+          - (If connecting to Adobe Commerce as a Cloud Service) Adobe Commerce as a Cloud Service
+
+      1.  Run the following command to populate the relevant `.env` values:
+
+          ```bash
+          npm run sync-oauth-credentials
+          ```
+
+          This will generate entries:
+
+          ```env
+          # IMS OAuth Server-to-Server Credentials
+          OAUTH_CLIENT_ID=
+          OAUTH_CLIENT_SECRETS=[""]
+          OAUTH_TECHNICAL_ACCOUNT_ID=
+          OAUTH_TECHNICAL_ACCOUNT_EMAIL=
+          OAUTH_SCOPES=[""]
+          OAUTH_IMS_ORG_ID=
+          ```
+      - If the credential is empty, make sure you have added the `I/O Management API` and your `.env` is synced with the Developer Console Project.
+
+1.  **Create a Commerce integration (PaaS only)**
+    1. Create a new Adobe Commerce Integration by following the [systems integration](https://experienceleague.adobe.com/en/docs/commerce-admin/systems/integrations) guide.
+
+    1. Make sure your API integration has the necessary permissions to access the Commerce REST API.
+
+       To confirm that you have access, in the Commerce Admin, navigate to **System** > **Extensions** > **Integrations**. Under the Basic Settings menu, click **API** to view the Available APIs. Then select **All** in the **Resource Access** field.
+
+    1. Copy the integration details (consumer key, consumer secret, access token, and access token secret) to the `.env` file in the root of the project.
+
+       ```env
+       COMMERCE_CONSUMER_KEY=<key>
+       COMMERCE_CONSUMER_SECRET=<secret>
+       COMMERCE_ACCESS_TOKEN=<access token>
+       COMMERCE_ACCESS_TOKEN_SECRET=<access token secret>
+       ```
+
+1.  **Configure Shipping Method:**
+
+    Create a shipping method defined in `shipping-carriers.yaml`:
+
+    ```bash
+        npm run create-shipping-carriers
+    ```
+
+1.  **Update Operational Environment Variables:**  
+     Before deploying, set the necessary environment variables for your App Builder actions as described in the [Environment Variables (App Builder Operational)](#environment-variables-app-builder-operational) section. These are critical for the App Builder app's ability to communicate with Adobe Commerce and perform internal encryption.
+
+1.  **Deploy App Builder Actions:**
     - Deploy the App Builder actions using the Adobe I/O CLI:
 
       ```bash
       aio app deploy
       ```
 
-      If you didn't use `aio app use`, follow the prompts to select your App Builder project and workspace.
-
-5.  **Configure ShipStation Settings in Adobe Commerce Backend:** After deploying the App Builder app, you **must** configure your ShipStation settings in your Adobe Commerce Admin panel as described in the [Configuration (Adobe Commerce Backend)](#configuration-adobe-commerce-backend) section.
+1.  **Configure ShipStation Settings in Adobe Commerce Backend:** After deploying the App Builder app, you **must** configure your ShipStation settings in your Adobe Commerce Admin panel as described in the [Configuration (Adobe Commerce Backend)](#configuration-adobe-commerce-backend) section.
 
 ---
 
@@ -237,23 +277,6 @@ For **local development**, these are typically set in your `.env` file within yo
 - `COMMERCE_WEBHOOKS_PUBLIC_KEY`
   - **Description:** The public key generated in the Commerce Admin to verify webhook signatures.
 
-### IMS OAuth Server-to-Server Credentials
-
-These are the credentials you generated in the [Requirements](#requirements) Adobe I/O Credentials (OAuth Server-to-Server) section.
-
-- `OAUTH_CLIENT_ID`
-  - **Description:** The Client ID for your Server-to-Server credential.
-- `OAUTH_CLIENT_SECRETS`
-  - **Description:** The Client Secret for your Server-to-Server credential.
-- `OAUTH_TECHNICAL_ACCOUNT_ID`
-  - **Description:** The Technical account ID for your Server-to-Server credential.
-- `OAUTH_TECHNICAL_ACCOUNT_EMAIL`
-  - **Description:** The Technical account email for your Server-to-Server credential.
-- `OAUTH_SCOPES`
-  - **Description:** The API scopes your application is authorized for. Should be `Adobe_Commerce_API`.
-- `OAUTH_IMS_ORG_ID`
-  - **Description:** Your Adobe IMS Organization ID.
-
 **Example `.env` file structure:**
 
 ```env
@@ -273,9 +296,13 @@ OAUTH_TECHNICAL_ACCOUNT_ID=...
 OAUTH_TECHNICAL_ACCOUNT_EMAIL=...
 OAUTH_SCOPES=Adobe_Commerce_API
 OAUTH_IMS_ORG_ID=...
-```
 
----
+#Commerce Integrations (PaaS Only)
+COMMERCE_CONSUMER_KEY=
+COMMERCE_CONSUMER_SECRET=
+COMMERCE_ACCESS_TOKEN=
+COMMERCE_ACCESS_TOKEN_SECRET=
+```
 
 ## Usage
 
@@ -302,7 +329,7 @@ For any issues, questions, or feature requests, please refer to the following:
 
 ## Contributing
 
-We welcome contributions\! If you'd like to contribute to this project, please follow these steps:
+We welcome contributions! If you'd like to contribute to this project, please follow these steps:
 
 1.  Fork the repository.
 2.  Create a new branch for your feature or bug fix.
