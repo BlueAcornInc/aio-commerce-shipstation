@@ -7,7 +7,6 @@ This Adobe App Builder extension provides a secure and efficient way for Adobe C
 - [Features](#features)
 - [Requirements](#requirements)
 - [Installation](#installation)
-  - [Downloading the latest release](#downloading-the-latest-release)
 - [Configuration (Adobe Commerce Backend)](#configuration-adobe-commerce-backend)
 - [Environment Variables (App Builder Operational)](#environment-variables-app-builder-operational)
 - [Usage](#usage)
@@ -64,15 +63,13 @@ Before installing this extension, ensure you have the following:
 
 You can install this extension either by downloading it directly from the repository or from the Adobe Exchange marketplace.
 
-### Downloading the latest release
-
 1.  **Download the Extension:** Get the latest release package from the [release page](https://github.com/BlueAcornInc/aio-commerce-shipstation/releases).
 
 1.  **Extract the Files:** Unzip the downloaded package from git to your preferred development directory. This directory contains the Shipstation Adobe App Builder project.
 
 1.  **Install the packages by running following command:** `npm install`
 
-1.  Copy the environment variables from the env.dist to a local .env file. We will complete the required variables in the upcoming sections.
+1.  Copy the environment variables from the `env.dist` to a local `.env` file. We will complete the required variables in the upcoming sections.
 
 1.  **Configure App Builder Project**
     - **Create an App Builder project in Developer Console**
@@ -103,7 +100,7 @@ You can install this extension either by downloading it directly from the reposi
 
           Select the following from the list:
           - I/O Management API
-          - (If connecting to Adobe Commerce as a Cloud Service) Adobe Commerce as a Cloud Service
+          - Adobe Commerce as a Cloud Service (If connecting to Adobe Commerce as a Cloud Service)
 
       1.  Run the following command to populate the relevant `.env` values:
 
@@ -145,7 +142,7 @@ You can install this extension either by downloading it directly from the reposi
     Create a shipping method defined in `shipping-carriers.yaml`:
 
     ```bash
-        npm run create-shipping-carriers
+    npm run create-shipping-carriers
     ```
 
 1.  **Update Operational Environment Variables:**  
