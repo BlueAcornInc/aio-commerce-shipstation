@@ -211,7 +211,7 @@ After deploying your App Builder actions, [create the webhooks](https://develope
          <method name="plugin.magento.out_of_process_shipping_methods.api.shipping_rate_repository.get_rates" type="after">
              <hooks>
                  <batch name="shipstation">
-                     <hook name="add_shipping_rates_shipstation" url="https://<your_app_builder>.runtime.adobe.io/api/v1/web/aio-commerce-shipstation-app/shipstation-shipping" method="POST" timeout="5000" softTimeout="1000" priority="100" required="true">
+                     <hook name="add_shipping_rates_shipstation" url="https://<your_app_builder>.runtime.adobe.io/api/v1/web/shipstation/shipstation-shipping" method="POST" timeout="5000" softTimeout="1000" priority="100" required="true">
                          <fields>
                              <field name="rateRequest" />
                          </fields>

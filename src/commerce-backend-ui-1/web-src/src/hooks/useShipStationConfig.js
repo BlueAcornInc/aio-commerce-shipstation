@@ -16,7 +16,7 @@ export function useShipStationConfigLoader(props, setFormState) {
      */
     async function loadConfig() {
       try {
-        const data = await callAction(props, "admin-ui-sdk/config", "GET");
+        const data = await callAction(props, "shipstation/admin-config", "GET");
         if (data) {
           setFormState((prevState) => ({ ...prevState, ...data.config }));
         }
@@ -48,7 +48,7 @@ export function useShipStationConfigSaver(props) {
    */
   async function saveConfig(config) {
     try {
-      await callAction(props, "admin-ui-sdk/config", "POST", config);
+      await callAction(props, "shipstation/admin-config", "POST", config);
       setStatusMsg("Configuration saved successfully");
       setHasError(false);
     } catch (err) {
