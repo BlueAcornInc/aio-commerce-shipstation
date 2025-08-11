@@ -23,7 +23,7 @@ runtimeManifest:
       actions:
         admin-config:
           function: actions/admin-config/index.js
-          web: yes
+          web: "yes"
           runtime: "nodejs:22"
           inputs:
             LOG_LEVEL: debug
@@ -43,6 +43,7 @@ runtimeManifest:
         shipstation-shipping:
           function: actions/shipstation-shipping/index.js
           runtime: nodejs:22
+          web: "yes"
           annotations:
             require-adobe-auth: false
             raw-http: true
