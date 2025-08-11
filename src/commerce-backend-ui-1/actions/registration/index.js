@@ -14,7 +14,7 @@ governing permissions and limitations under the License.
  * @returns {object} Registration object
  */
 async function main() {
-  const extensionId = "ShipStation";
+  const extensionId = "shipstation";
 
   return {
     statusCode: 200,
