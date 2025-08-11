@@ -18,8 +18,11 @@ runtimeManifest:
           annotations:
             require-adobe-auth: true
             final: true
-        config:
-          function: actions/config/index.js
+    shipstation:
+      license: Apache-2.0
+      actions:
+        admin-config:
+          function: actions/admin-config/index.js
           web: yes
           runtime: "nodejs:22"
           inputs:
@@ -36,3 +39,12 @@ runtimeManifest:
           annotations:
             require-adobe-auth: true
             final: true
+            web: "yes"
+        shipstation-shipping:
+          function: actions/shipstation-shipping/index.js
+          runtime: nodejs:22
+          annotations:
+            require-adobe-auth: false
+            raw-http: true
+            final: true
+            web: "yes"
