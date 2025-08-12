@@ -19,9 +19,10 @@ function createShippingOperation(carrierData) {
 /**
  *
  * @param {string} message Error message
+ * @param {object} context Context object
  * @returns {object} Error response
  */
-function singleErrorMethod(message) {
+function singleErrorMethod(message, context) {
   return {
     statusCode: 200,
     body: JSON.stringify([
@@ -34,7 +35,13 @@ function singleErrorMethod(message) {
           method_title: `ShipStation Error: ${message}`,
           price: 0,
           cost: 0,
-          additional_data: [{ key: "error", value: message }],
+          additional_data: [
+            { key: "error", value: message },
+            {
+              key: "context",
+              value: context || "No additional context provided",
+            },
+          ],
         },
       },
     ]),
@@ -135,7 +142,10 @@ async function main(params) {
 
     // Validate mandatory config fields
     if (!shipstationApiKey || !carrierIdsStr) {
-      return singleErrorMethod("Missing config (API Key or Carrier IDs)");
+      return singleErrorMethod(
+        "Missing config (API Key or Carrier IDs)",
+        config,
+      );
     }
     if (
       !warehouseName ||
@@ -146,7 +156,10 @@ async function main(params) {
       !warehousePostalCode ||
       !warehouseCountryCode
     ) {
-      return singleErrorMethod("Missing warehouse fields in stored config");
+      return singleErrorMethod(
+        "Missing warehouse fields in stored config",
+        config,
+      );
     }
 
     // 2) Build the packages from rateRequest items
@@ -196,14 +209,18 @@ async function main(params) {
       if (!res.ok) {
         const errTxt = await res.text();
         logger.error(`ShipStation API Error (HTTP ${res.status}): ${errTxt}`);
-        return singleErrorMethod("ShipStation API Error");
+        return singleErrorMethod("ShipStation API Error", {
+          status: res.status,
+          message: errTxt,
+          shipstationPayload,
+        });
       }
 
       const data = await res.json();
       rawRates = data.rates || data.rate_response?.rates || [];
     } catch (err) {
       logger.error("Network error calling ShipStation:", err.message);
-      return singleErrorMethod("ShipStation Network Error");
+      return singleErrorMethod("ShipStation Network Error", err);
     }
 
     // 5) Convert rates to JSON Patch operations
@@ -240,7 +257,7 @@ async function main(params) {
       body: JSON.stringify(operations),
     };
   } catch (err) {
-    return singleErrorMethod("Server Error");
+    return singleErrorMethod("Server Error", err);
   }
 }
 
