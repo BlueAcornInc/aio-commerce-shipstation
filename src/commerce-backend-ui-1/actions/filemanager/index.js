@@ -19,7 +19,8 @@ async function main(params) {
         if (properties.isDirectory) {
           content = await files.list(params.path);
         } else {
-          content = await files.read(params.path).toString();
+          const buffer = await files.read(params.path);
+          content = buffer.toString();
         }
       } else {
         content = await files.list("/");
