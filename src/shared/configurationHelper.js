@@ -1,4 +1,5 @@
 const stateLib = require("@adobe/aio-lib-state");
+const { Core } = require("@adobe/aio-sdk");
 
 // Import the MAX_TTL constant
 const { MAX_TTL } = stateLib;
@@ -41,9 +42,13 @@ async function writeConfiguration(config, name, params) {
  */
 async function readConfiguration(params, name) {
   const { ENCRYPTION_KEY, ENCRYPTION_IV, RUNTIME_NAMESPACE } = params;
+  const logger = Core.Logger("configurationHelper", { level: "info" });
   const state = await stateLib.init();
 
   let config = await state.get(`${name}Config`);
+  logger.info(
+    `Read configuration from state key ${name}Config : ${JSON.stringify(config)}`,
+  );
 
   if (!config || !config.value) {
     // If the state read config is null/falsey, we try to read it from the file
@@ -56,6 +61,9 @@ async function readConfiguration(params, name) {
 
     // Decrypt the configuration
     config = helper.decryptConfig(encryptedConfig);
+    logger.info(
+      `Decrypted configuration from file ${filePath} : ${JSON.stringify(config)}`,
+    );
 
     // State the loaded configuration on the state
     await state.put(`${name}Config`, JSON.stringify(config), {
