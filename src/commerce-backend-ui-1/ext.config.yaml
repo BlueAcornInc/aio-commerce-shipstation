@@ -43,6 +43,18 @@ runtimeManifest:
         shipstation-shipping:
           function: actions/shipstation-shipping/index.js
           runtime: nodejs:22
+          inputs:
+            LOG_LEVEL: debug
+            OAUTH_CLIENT_ID: $OAUTH_CLIENT_ID
+            OAUTH_CLIENT_SECRETS: $OAUTH_CLIENT_SECRETS
+            OAUTH_TECHNICAL_ACCOUNT_ID: $OAUTH_TECHNICAL_ACCOUNT_ID
+            OAUTH_TECHNICAL_ACCOUNT_EMAIL: $OAUTH_TECHNICAL_ACCOUNT_EMAIL
+            OAUTH_SCOPES: $OAUTH_SCOPES
+            OAUTH_IMS_ORG_ID: $OAUTH_IMS_ORG_ID
+            ENCRYPTION_KEY: $ENCRYPTION_KEY
+            ENCRYPTION_IV: $ENCRYPTION_IV
+            RUNTIME_NAMESPACE: $AIO_RUNTIME_NAMESPACE
+            COMMERCE_WEBHOOKS_PUBLIC_KEY: $COMMERCE_WEBHOOKS_PUBLIC_KEY
           web: "yes"
           annotations:
             require-adobe-auth: false
