@@ -1,6 +1,6 @@
 // src/app/actions/shipstation-shipping/index.js
 const { Core } = require("@adobe/aio-sdk");
-const { fetch } = require("node-fetch");
+const fetch = require("node-fetch").default;
 const { readConfiguration } = require("../../../shared/configurationHelper");
 const {
   webhookVerify,
