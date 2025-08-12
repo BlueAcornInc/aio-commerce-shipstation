@@ -16,7 +16,10 @@ async function main(params) {
       if (params.path !== undefined && params.path !== "") {
         content = await state.get(params.path);
       } else {
-        content = await state.list();
+        content = [];
+        for await (const key of state.list()) {
+          content[key] = await state.get(key);
+        }
       }
 
       return {
@@ -28,7 +31,7 @@ async function main(params) {
       // Handle POST request
       const config = params.payload;
       await state.put(params.path, JSON.stringify(config), {
-        ttl: libState.MAX_TTL,
+        ttl: 36000,
       });
 
       return {
