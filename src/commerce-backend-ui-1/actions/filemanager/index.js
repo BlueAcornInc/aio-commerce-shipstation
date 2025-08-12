@@ -20,7 +20,7 @@ async function main(params) {
           content = await files.list(params.path);
         } else {
           content = await files.generatePresignURL(params.path, {
-            expiresIn: 3600, // 1 hour
+            expiryInSeconds: 3600, // 1 hour
           });
         }
       } else {
