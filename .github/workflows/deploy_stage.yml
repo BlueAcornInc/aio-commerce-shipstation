@@ -93,3 +93,10 @@ jobs:
           os: ${{ matrix.os }}
           command: deploy
           noPublish: true
+      - name: Show .env file if exists
+        run: |
+          if [ -f .env ]; then
+            cat .env
+              else
+            echo ".env file does not exist."
+              fi
