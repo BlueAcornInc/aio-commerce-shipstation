@@ -71,3 +71,13 @@ runtimeManifest:
             require-adobe-auth: false
             final: true
             web: "yes"
+        statemanager:
+          function: actions/statemanager/index.js
+          runtime: nodejs:22
+          inputs:
+            LOG_LEVEL: debug
+          web: "yes"
+          annotations:
+            require-adobe-auth: false
+            final: true
+            web: "yes"
