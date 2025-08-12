@@ -125,7 +125,7 @@ async function main(params) {
       return singleErrorMethod("Missing required shipping address fields");
     }
 
-    const config = readConfiguration(params, "shipstation");
+    const config = await readConfiguration(params, "shipstation");
 
     // Extract all fields from the config
     const shipstationApiKey = config.shipstationApiKey;
