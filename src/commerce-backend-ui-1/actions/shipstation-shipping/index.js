@@ -197,7 +197,6 @@ async function main(params) {
     // 4) POST to ShipStation /v2/rates
     let rawRates = [];
     try {
-      logger.info(`Type of fetch:${typeof fetch}`);
       const res = await fetch("https://api.shipstation.com/v2/rates", {
         method: "POST",
         headers: {
