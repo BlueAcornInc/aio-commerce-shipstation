@@ -70,10 +70,9 @@ async function readConfiguration(params, name) {
     config = helper.decryptConfig(encryptedConfig);
 
     // State the loaded configuration on the state
-    await state.put(`${name}Config`, JSON.stringify(config), {
+    await state.put(`${name}Config`, config.value, {
       ttl: MAX_TTL,
     });
-    return config;
   }
   return JSON.parse(config.value);
 }
