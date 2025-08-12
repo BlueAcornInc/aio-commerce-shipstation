@@ -17,12 +17,12 @@ async function main(params) {
       if (params.path !== undefined && params.path !== "") {
         const properties = await files.getProperties(params.path);
         if (properties.isDirectory) {
-          content = files.list(params.path);
+          content = await files.list(params.path);
         } else {
-          content = files.read(params.path).toString();
+          content = await files.read(params.path).toString();
         }
       } else {
-        content = files.list("/");
+        content = await files.list("/");
       }
 
       // Handle GET request
@@ -46,7 +46,7 @@ async function main(params) {
 
       try {
         // Write the content to the specified file
-        files.write(filePath, Buffer.from(content), {
+        await files.write(filePath, Buffer.from(content), {
           contentType: "text/plain",
         });
         return {
@@ -77,7 +77,7 @@ async function main(params) {
 
       try {
         // Delete the specified file
-        files.delete(filePath);
+        await files.delete(filePath);
         return {
           statusCode: 200,
           headers: { "Content-Type": "application/json" },
@@ -106,7 +106,7 @@ async function main(params) {
 
       try {
         // Write the content to the specified file
-        files.write(filePath, Buffer.from(content), {
+        await files.write(filePath, Buffer.from(content), {
           contentType: "text/plain",
         });
         return {
@@ -134,7 +134,7 @@ async function main(params) {
     return {
       statusCode: 500,
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ error: "Internal Server Error" }),
+      body: JSON.stringify({ error }),
     };
   }
 }
