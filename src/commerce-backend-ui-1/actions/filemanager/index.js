@@ -19,8 +19,9 @@ async function main(params) {
         if (properties.isDirectory) {
           content = await files.list(params.path);
         } else {
-          const buffer = await files.read(params.path);
-          content = buffer.toString();
+          content = await files.generatePresignURL(params.path, {
+            expiresIn: 3600, // 1 hour
+          });
         }
       } else {
         content = await files.list("/");
