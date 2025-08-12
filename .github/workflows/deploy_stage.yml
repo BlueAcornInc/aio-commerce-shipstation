@@ -93,10 +93,44 @@ jobs:
           os: ${{ matrix.os }}
           command: deploy
           noPublish: true
-      - name: Show .env file if exists
+      - name: Show .env, .aio, and environment variables
+        env:
+          AIO_RUNTIME_NAMESPACE: ${{ vars.AIO_RUNTIME_NAMESPACE_STAGE }}
+          AIO_RUNTIME_AUTH: ${{ secrets.AIO_RUNTIME_AUTH_STAGE }}
+          AIO_PROJECT_ID: ${{ vars.AIO_PROJECT_ID_STAGE }}
+          AIO_PROJECT_NAME: ${{ vars.AIO_PROJECT_NAME_STAGE }}
+          AIO_PROJECT_ORG_ID: ${{ vars.AIO_PROJECT_ORG_ID_STAGE }}
+          AIO_PROJECT_WORKSPACE_ID: ${{ vars.AIO_PROJECT_WORKSPACE_ID_STAGE }}
+          AIO_PROJECT_WORKSPACE_NAME: ${{ vars.AIO_PROJECT_WORKSPACE_NAME_STAGE }}
+          AIO_PROJECT_WORKSPACE_DETAILS_SERVICES: ${{ vars.AIO_PROJECT_WORKSPACE_DETAILS_SERVICES_STAGE }}
+          COMMERCE_WEBHOOKS_PUBLIC_KEY: ${{ vars.COMMERCE_WEBHOOKS_PUBLIC_KEY_STAGE }}
+          COMMERCE_ENDPOINT: ${{ vars.COMMERCE_ENDPOINT }}
+          SHIPSTATION_API_KEY: ${{ vars.SHIPSTATION_API_KEY }}
+          SHIPSTATION_CARRIER_IDS: ${{ vars.SHIPSTATION_CARRIER_IDS }}
+          SHIPSTATION_WAREHOUSE_NAME: ${{ vars.SHIPSTATION_WAREHOUSE_NAME }}
+          SHIPSTATION_WAREHOUSE_PHONE: ${{ vars.SHIPSTATION_WAREHOUSE_PHONE }}
+          SHIPSTATION_WAREHOUSE_ADDRESS_LINE1: ${{ vars.SHIPSTATION_WAREHOUSE_ADDRESS_LINE1 }}
+          SHIPSTATION_WAREHOUSE_CITY: ${{ vars.SHIPSTATION_WAREHOUSE_CITY }}
+          SHIPSTATION_WAREHOUSE_REGION: ${{ vars.SHIPSTATION_WAREHOUSE_REGION }}
+          SHIPSTATION_WAREHOUSE_POSTCODE: ${{ vars.SHIPSTATION_WAREHOUSE_POSTCODE }}
+          SHIPSTATION_WAREHOUSE_COUNTRY: ${{ vars.SHIPSTATION_WAREHOUSE_COUNTRY }}
+          SHIPSTATION_SHIPTO_NAME: ${{ vars.SHIPSTATION_SHIPTO_NAME }}
+          SHIPSTATION_SHIPTO_PHONE: ${{ vars.SHIPSTATION_SHIPTO_PHONE }}
+          SHIPSTATION_DEBUGGING: ${{ vars.SHIPSTATION_DEBUGGING }}
+          ENCRYPTION_KEY: ${{ secrets.ENCRYPTION_KEY }}
+          ENCRYPTION_IV: ${{ secrets.ENCRYPTION_IV }}
         run: |
+          echo "---- .env ----"
           if [ -f .env ]; then
             cat .env
-              else
+          else
             echo ".env file does not exist."
-              fi
+          fi
+          echo "---- .aio ----"
+          if [ -f .aio ]; then
+            cat .aio
+          else
+            echo ".aio file does not exist."
+          fi
+          echo "---- Environment Variables ----"
+          printenv
