@@ -16,8 +16,11 @@ async function main(params) {
       if (params.path !== undefined && params.path !== "") {
         content = await state.get(params.path);
       } else {
-        content = [];
+        content = {};
         for await (const key of state.list()) {
+          logger.info(
+            `Fetching state for key: ${JSON.stringify(key)} (type: ${typeof key})`,
+          );
           content[key] = await state.get(key);
         }
       }
