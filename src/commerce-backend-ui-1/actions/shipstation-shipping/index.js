@@ -142,10 +142,10 @@ async function main(params) {
 
     // Validate mandatory config fields
     if (!shipstationApiKey || !carrierIdsStr) {
-      return singleErrorMethod(
-        "Missing config (API Key or Carrier IDs)",
+      return singleErrorMethod("Missing config (API Key or Carrier IDs)", {
         config,
-      );
+        params,
+      });
     }
     if (
       !warehouseName ||

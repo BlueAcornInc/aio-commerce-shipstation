@@ -45,7 +45,7 @@ async function readConfiguration(params, name) {
 
   let config = await state.get(`${name}Config`);
 
-  if (!config) {
+  if (!config || !config.value) {
     // If the state read config is null/falsey, we try to read it from the file
 
     // Read the encrypted file as a buffer, let the exceptions bubble up
