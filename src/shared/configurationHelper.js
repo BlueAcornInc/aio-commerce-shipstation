@@ -49,7 +49,14 @@ async function readConfiguration(params, name) {
     !config ||
     !config.value ||
     config.value === "{}" ||
-    config.value === "[]"
+    config.value === "[]" ||
+    config.value === null ||
+    config.value === undefined ||
+    config.value === "" ||
+    config.value === "null" ||
+    config.value === "undefined" ||
+    Array.isArray(config.value) ||
+    (Object.isObject(config.value) && Object.keys(config.value).length === 0)
   ) {
     // If the state read config is null/falsey, we try to read it from the file
 
@@ -66,6 +73,7 @@ async function readConfiguration(params, name) {
     await state.put(`${name}Config`, JSON.stringify(config), {
       ttl: MAX_TTL,
     });
+    return config;
   }
   return JSON.parse(config.value);
 }
