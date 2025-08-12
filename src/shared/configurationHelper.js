@@ -51,6 +51,7 @@ async function readConfiguration(params, name) {
   );
 
   if (!config || !config.value) {
+    logger.info(`No configuration found in state for key ${name}Config`);
     // If the state read config is null/falsey, we try to read it from the file
 
     // Read the encrypted file as a buffer, let the exceptions bubble up
@@ -71,8 +72,15 @@ async function readConfiguration(params, name) {
     });
 
     return config;
+  } else {
+    const objectConfig = JSON.parse(config.value);
+    logger.info(
+      `Parsed configuration from state ${name}Config : ${JSON.stringify(
+        objectConfig,
+      )}`,
+    );
+    return objectConfig;
   }
-  return JSON.parse(config.value);
 }
 
 exports.readConfiguration = readConfiguration;
