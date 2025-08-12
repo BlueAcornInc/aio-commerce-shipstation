@@ -45,19 +45,7 @@ async function readConfiguration(params, name) {
 
   let config = await state.get(`${name}Config`);
 
-  if (
-    !config ||
-    !config.value ||
-    config.value === "{}" ||
-    config.value === "[]" ||
-    config.value === null ||
-    config.value === undefined ||
-    config.value === "" ||
-    config.value === "null" ||
-    config.value === "undefined" ||
-    Array.isArray(config.value) ||
-    (Object.isObject(config.value) && Object.keys(config.value).length === 0)
-  ) {
+  if (!config) {
     // If the state read config is null/falsey, we try to read it from the file
 
     // Read the encrypted file as a buffer, let the exceptions bubble up
@@ -70,7 +58,7 @@ async function readConfiguration(params, name) {
     config = helper.decryptConfig(encryptedConfig);
 
     // State the loaded configuration on the state
-    await state.put(`${name}Config`, config.value, {
+    await state.put(`${name}Config`, JSON.stringify(config), {
       ttl: MAX_TTL,
     });
   }
