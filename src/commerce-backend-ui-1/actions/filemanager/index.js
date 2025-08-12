@@ -1,4 +1,4 @@
-const files = require("@adobe/aio-lib-files");
+const libFiles = require("@adobe/aio-lib-files");
 const { Core } = require("@adobe/aio-sdk");
 
 /**
@@ -7,7 +7,7 @@ const { Core } = require("@adobe/aio-sdk");
  * @returns {object} response
  */
 async function main(params) {
-  files.init();
+  const files = await libFiles.init();
   const logger = Core.Logger("filemanager", { level: "info" });
 
   try {
