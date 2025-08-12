@@ -61,6 +61,8 @@ async function readConfiguration(params, name) {
     await state.put(`${name}Config`, JSON.stringify(config), {
       ttl: MAX_TTL,
     });
+
+    return config;
   }
   return JSON.parse(config.value);
 }
