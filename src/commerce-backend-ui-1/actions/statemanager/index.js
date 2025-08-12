@@ -17,7 +17,8 @@ async function main(params) {
         content = await state.get(params.path);
       } else {
         content = {};
-        for await (const key of state.list()) {
+        const list = await state.list();
+        for (const key of list.keys) {
           logger.info(
             `Fetching state for key: ${JSON.stringify(key)} (type: ${typeof key})`,
           );
