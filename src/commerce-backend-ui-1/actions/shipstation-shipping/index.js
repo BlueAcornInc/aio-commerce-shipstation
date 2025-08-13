@@ -99,12 +99,12 @@ async function main(params) {
       payload = JSON.parse(atob(params.__ow_body));
     } catch (err) {
       logger.error("Failed to decode payload:", err.message);
-      return singleErrorMethod("Invalid Payload Format");
+      return webhookErrorResponse("Invalid Payload Format");
     }
 
     const { rateRequest: request } = payload || {};
     if (!request) {
-      return singleErrorMethod("Missing Rate Request");
+      return webhookErrorResponse("Missing Rate Request");
     }
 
     const {
@@ -122,7 +122,7 @@ async function main(params) {
       !destCity ||
       !destStreet
     ) {
-      return singleErrorMethod("Missing required shipping address fields");
+      return webhookErrorResponse("Missing required shipping address fields");
     }
 
     const config = await readConfiguration(params, "shipstation");
@@ -142,10 +142,7 @@ async function main(params) {
 
     // Validate mandatory config fields
     if (!shipstationApiKey || !carrierIdsStr) {
-      return singleErrorMethod(
-        "Missing config (API Key or Carrier IDs)",
-        config,
-      );
+      return webhookErrorResponse("Missing config (API Key or Carrier IDs)");
     }
     if (
       !warehouseName ||
@@ -156,10 +153,7 @@ async function main(params) {
       !warehousePostalCode ||
       !warehouseCountryCode
     ) {
-      return singleErrorMethod(
-        "Missing warehouse fields in stored config",
-        config,
-      );
+      return webhookErrorResponse("Missing warehouse fields in stored config");
     }
 
     // 2) Build the packages from rateRequest items
@@ -209,24 +203,18 @@ async function main(params) {
       if (!res.ok) {
         const errTxt = await res.text();
         logger.error(`ShipStation API Error (HTTP ${res.status}): ${errTxt}`);
-        return singleErrorMethod("ShipStation API Error", {
-          status: res.status,
-          message: errTxt,
-          shipstationPayload,
-        });
+        return webhookErrorResponse("ShipStation API Error");
       }
 
       const data = await res.json();
       rawRates = data.rates || data.rate_response?.rates || [];
     } catch (err) {
       logger.error("Network error calling ShipStation:", err.message);
-      return singleErrorMethod("ShipStation Network Error", err);
+      return webhookErrorResponse("ShipStation Network Error");
     }
 
     // 5) Convert rates to JSON Patch operations
-    if (rawRates.length === 0) {
-      return singleErrorMethod("No Rates Available");
-    }
+
     const usedMethodNames = {};
     const operations = rawRates.map((rate) => {
       const cost = rate.shipping_amount?.amount ?? rate.shipment_cost ?? 0;
