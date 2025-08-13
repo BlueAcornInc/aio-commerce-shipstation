@@ -245,7 +245,8 @@ async function main(params) {
       body: JSON.stringify(operations),
     };
   } catch (err) {
-    return singleErrorMethod("Server Error", err);
+    logger.error("Error in ShipStation shipping action:", err.message);
+    return webhookErrorResponse(`Server Error: ${err.message}`);
   }
 }
 
