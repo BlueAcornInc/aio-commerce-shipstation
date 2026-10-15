@@ -4,6 +4,9 @@ on:
   push:
     branches:
       - main
+      # Push a branch as stage/<name> to deploy it to the Stage workspace
+      # and test it before it merges.
+      - "stage/**"
 jobs:
   deploy:
     name: Deploy to Stage
@@ -92,7 +95,6 @@ jobs:
         with:
           os: ${{ matrix.os }}
           command: deploy
-          noPublish: true
       - name: Show .env, .aio, and environment variables
         env:
           AIO_RUNTIME_NAMESPACE: ${{ vars.AIO_RUNTIME_NAMESPACE_STAGE }}

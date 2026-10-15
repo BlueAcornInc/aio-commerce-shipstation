@@ -68,9 +68,55 @@ describe("Admin Main Action", () => {
       expect(response.headers["Content-Type"]).toBe("application/json");
       const body = JSON.parse(response.body);
       expect(body.error).toContain("Missing required fields");
-      expect(mockLogger.error).toHaveBeenCalledWith(
-        "Missing field for request",
-        params,
+      expect(body.error).toContain("shipstationCarrierIds");
+      expect(mockLogger.warn).toHaveBeenCalledWith(
+        "Missing required fields: shipstationCarrierIds",
+      );
+    });
+
+    test("should never echo or log action params on a bad request", async () => {
+      // Distinctive marker values, so a leak anywhere is easy to detect.
+      const marker = (name) => `${name}-must-not-leak`;
+      const params = {
+        __ow_method: "post",
+        __ow_headers: { authorization: `Bearer ${marker("ims")}` },
+        ENCRYPTION_KEY: marker("key"),
+        ENCRYPTION_IV: marker("iv"),
+        OAUTH_CLIENT_SECRETS: marker("oauth"),
+        payload: { shipstationApiKey: marker("shipstation") },
+      };
+
+      const response = await main(params);
+
+      expect(response.statusCode).toBe(400);
+      const logged = JSON.stringify(
+        Object.values(mockLogger).flatMap((fn) => fn.mock.calls),
+      );
+      ["ims", "key", "iv", "oauth", "shipstation"]
+        .map(marker)
+        .forEach((value) => {
+          expect(response.body).not.toContain(value);
+          expect(logged).not.toContain(value);
+        });
+      expect(JSON.parse(response.body).receivedParams).toBeUndefined();
+    });
+
+    test("should keep the stored API key when the payload leaves it blank", async () => {
+      mockReadConfiguration.mockResolvedValueOnce({
+        shipstationApiKey: "storedKey",
+        shipstationCarrierIds: "UPS",
+      });
+      mockWriteConfiguration.mockResolvedValueOnce();
+
+      const response = await main({
+        __ow_method: "post",
+        payload: { shipstationApiKey: "", shipstationCarrierIds: "UPS,USPS" },
+      });
+
+      expect(response.statusCode).toBe(200);
+      expect(response.body).not.toContain("storedKey");
+      expect(mockWriteConfiguration.mock.calls[0][0].shipstationApiKey).toBe(
+        "storedKey",
       );
     });
 
@@ -103,7 +149,13 @@ describe("Admin Main Action", () => {
       const body = JSON.parse(response.body);
       expect(body.success).toBe(true);
       expect(body.message).toBe("Saved ShipStation config");
-      expect(body.savedConfig).toEqual(mockPayload);
+      expect(response.body).not.toContain("asbfBDasrqwe");
+      const { shipstationApiKey, ...publicFields } = mockPayload;
+      expect(shipstationApiKey).toBeDefined();
+      expect(body.savedConfig).toEqual({
+        ...publicFields,
+        hasShipstationApiKey: true,
+      });
       expect(mockWriteConfiguration).toHaveBeenCalledWith(
         mockPayload,
         "shipstation",
@@ -176,7 +228,13 @@ describe("Admin Main Action", () => {
       const body = JSON.parse(response.body);
       expect(body.success).toBe(true);
       expect(body.message).toBe("Loaded ShipStation config");
-      expect(body.config).toEqual(mockLoadedConfig);
+      expect(response.body).not.toContain("asbfBDasrqwe");
+      const { shipstationApiKey, ...publicFields } = mockLoadedConfig;
+      expect(shipstationApiKey).toBeDefined();
+      expect(body.config).toEqual({
+        ...publicFields,
+        hasShipstationApiKey: true,
+      });
       expect(mockReadConfiguration).toHaveBeenCalledWith(params, "shipstation");
       expect(mockLogger.error).not.toHaveBeenCalled();
     });

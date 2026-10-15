@@ -4,6 +4,36 @@ const {
   writeConfiguration,
 } = require("../../../shared/configurationHelper");
 
+const REQUIRED_FIELDS = ["shipstationCarrierIds"];
+
+/**
+ * The configuration the admin UI may see. The ShipStation API key is
+ * write-only: it is never returned, only reported as present or absent.
+ *
+ * @param {object} config Stored configuration
+ * @returns {object} Configuration safe to return to the browser
+ */
+function toAdminConfig(config = {}) {
+  const { shipstationApiKey, ...rest } = config;
+  return { ...rest, hasShipstationApiKey: Boolean(shipstationApiKey) };
+}
+
+/**
+ * Read the stored API key, if any, so a save without a new key keeps it.
+ *
+ * @param {object} params Action params
+ * @param {string} name Configuration name
+ * @returns {Promise<string|undefined>} The stored key, or undefined
+ */
+async function readStoredApiKey(params, name) {
+  try {
+    const existing = await readConfiguration(params, name);
+    return existing?.shipstationApiKey;
+  } catch {
+    return undefined;
+  }
+}
+
 /**
  * Main admin action
  *
@@ -16,8 +46,26 @@ async function main(params) {
 
   // Check the method
   if (params.__ow_method === "post") {
+    const payload = params.payload || {};
+    // Write-only key: a blank value keeps the stored one.
+    const shipstationApiKey =
+      payload.shipstationApiKey || (await readStoredApiKey(params, name));
+    const missing = REQUIRED_FIELDS.filter((field) => !payload[field]);
+    if (!shipstationApiKey) missing.unshift("shipstationApiKey");
+
+    if (missing.length > 0) {
+      // Field names only: params carries credentials and is never logged.
+      logger.warn(`Missing required fields: ${missing.join(", ")}`);
+      return {
+        statusCode: 400,
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          error: `Missing required fields (${missing.join(", ")}).`,
+        }),
+      };
+    }
+
     const {
-      shipstationApiKey,
       shipstationCarrierIds,
       warehouseName,
       warehousePhone,
@@ -28,20 +76,7 @@ async function main(params) {
       warehouseCountryCode,
       shipToName,
       shipToPhone,
-    } = params.payload;
-
-    if (!shipstationApiKey || !shipstationCarrierIds) {
-      logger.error("Missing field for request", params);
-      return {
-        statusCode: 400,
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          error:
-            "Missing required fields (shipstationApiKey, shipstationCarrierIds).",
-          receivedParams: params,
-        }),
-      };
-    }
+    } = payload;
 
     const configToStore = {
       shipstationApiKey,
@@ -66,7 +101,7 @@ async function main(params) {
         body: JSON.stringify({
           success: true,
           message: "Saved ShipStation config",
-          savedConfig: configToStore,
+          savedConfig: toAdminConfig(configToStore),
         }),
       };
     } catch (error) {
@@ -77,7 +112,6 @@ async function main(params) {
         body: JSON.stringify({
           success: false,
           message: "Error while saving configuration",
-          error: error || "Unknown error",
         }),
       };
     }
@@ -90,7 +124,7 @@ async function main(params) {
         body: JSON.stringify({
           success: true,
           message: "Loaded ShipStation config",
-          config: loadedConfig,
+          config: toAdminConfig(loadedConfig),
         }),
       };
     } catch (error) {
@@ -101,7 +135,6 @@ async function main(params) {
         body: JSON.stringify({
           success: false,
           message: "Error while loading configuration",
-          error: error || "Unknown error",
         }),
       };
     }
