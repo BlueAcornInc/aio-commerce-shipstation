@@ -1,8 +1,8 @@
 {
   "name": "shipstation",
   "displayName": "ShipStation",
-  "description": "Provides ShipStation as a shipping method",
+  "description": "Live ShipStation shipping rates for Adobe Commerce, configured and installed through App Management",
   "platform": "web",
   "id": "shipstation",
-  "version": "1.0.5"
+  "version": "2.0.0"
 }

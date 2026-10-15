@@ -1,11 +1,34 @@
+application:
+  runtimeManifest:
+    packages:
+      shipstation:
+        license: Apache-2.0
+        actions:
+          # Out-of-process shipping rates. Commerce calls it as a webhook
+          # (registered by App Management on install); signature-verified.
+          shipstation-shipping:
+            function: src/actions/shipstation-shipping/index.js
+            web: "yes"
+            runtime: nodejs:22
+            inputs:
+              LOG_LEVEL: info
+              COMMERCE_WEBHOOKS_PUBLIC_KEY: $COMMERCE_WEBHOOKS_PUBLIC_KEY
+              AIO_COMMERCE_CONFIG_ENCRYPTION_KEY: $AIO_COMMERCE_CONFIG_ENCRYPTION_KEY
+            annotations:
+              require-adobe-auth: false
+              raw-http: true
+              final: true
+
 extensions:
-  commerce/backend-ui/1:
-    $include: src/commerce-backend-ui-1/ext.config.yaml
-operations:
-  view:
-    - type: web
-      impl: web
-requiredProducts:
+  # This extension is required for business configuration. Do not remove.
+  commerce/configuration/1:
+    $include: src/commerce-configuration-1/ext.config.yaml
+
+  # This extension is required for app management. Do not remove.
+  commerce/extensibility/1:
+    $include: src/commerce-extensibility-1/ext.config.yaml
+
+productDependencies:
   - code: COMMC
-    minVersion: 2.4.5
+    minVersion: 2.4.7
     maxVersion: 2.4.99

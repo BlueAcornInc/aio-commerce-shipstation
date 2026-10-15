@@ -1,0 +1,144 @@
+{
+  "businessConfig": {
+    "schema": [
+      {
+        "default": "off",
+        "description": "Turn ShipStation rates on or off at checkout",
+        "label": "Status",
+        "name": "status",
+        "options": [
+          {
+            "label": "On",
+            "value": "on"
+          },
+          {
+            "label": "Off",
+            "value": "off"
+          }
+        ],
+        "selectionMode": "single",
+        "type": "list"
+      },
+      {
+        "default": "",
+        "description": "From ShipStation > Settings > API. Stored encrypted and never shown again.",
+        "label": "ShipStation API Key",
+        "name": "shipstationApiKey",
+        "type": "password"
+      },
+      {
+        "default": "",
+        "description": "Comma-separated ShipStation carrier IDs to quote, for example se-123456,se-654321.",
+        "label": "Carrier IDs",
+        "name": "shipstationCarrierIds",
+        "type": "text"
+      },
+      {
+        "default": "",
+        "description": "Warehouse or business name.",
+        "label": "Ship-from name",
+        "name": "warehouseName",
+        "type": "text"
+      },
+      {
+        "default": "",
+        "description": "Warehouse phone number.",
+        "label": "Ship-from phone",
+        "name": "warehousePhone",
+        "type": "text"
+      },
+      {
+        "default": "",
+        "description": "Street address.",
+        "label": "Ship-from address",
+        "name": "warehouseAddressLine1",
+        "type": "text"
+      },
+      {
+        "default": "",
+        "description": "City.",
+        "label": "Ship-from city",
+        "name": "warehouseCityLocality",
+        "type": "text"
+      },
+      {
+        "default": "",
+        "description": "Two-letter code, for example NC.",
+        "label": "Ship-from state or province",
+        "name": "warehouseStateProvince",
+        "type": "text"
+      },
+      {
+        "default": "",
+        "description": "Postal code.",
+        "label": "Ship-from postal code",
+        "name": "warehousePostalCode",
+        "type": "text"
+      },
+      {
+        "default": "",
+        "description": "Two-letter country code, for example US.",
+        "label": "Ship-from country",
+        "name": "warehouseCountryCode",
+        "type": "text"
+      },
+      {
+        "default": "",
+        "description": "Optional. Used when the rate request has no recipient name.",
+        "label": "Default recipient name",
+        "name": "shipToName",
+        "type": "text"
+      },
+      {
+        "default": "",
+        "description": "Optional. Used when the rate request has no recipient phone.",
+        "label": "Default recipient phone",
+        "name": "shipToPhone",
+        "type": "text"
+      }
+    ]
+  },
+  "installation": {
+    "customInstallationSteps": [
+      {
+        "description": "Creates the ShipStation out-of-process shipping carrier in Commerce.",
+        "name": "Create ShipStation carrier",
+        "script": "./scripts/install/create-carrier.js"
+      }
+    ],
+    "messages": {
+      "postInstallation": "Set Status to On and enter your ShipStation API key, carrier IDs and ship-from address to start quoting rates.",
+      "preInstallation": "Installing registers the ShipStation shipping-rates webhook and creates the ShipStation shipping carrier. Configure your API key, carrier IDs and ship-from address afterwards."
+    }
+  },
+  "metadata": {
+    "description": "Live ShipStation shipping rates at Adobe Commerce checkout, through out-of-process shipping methods",
+    "displayName": "ShipStation",
+    "id": "shipstation",
+    "version": "2.0.0"
+  },
+  "webhooks": [
+    {
+      "category": "append",
+      "description": "Adds live ShipStation rates to the shipping methods offered at checkout.",
+      "label": "ShipStation shipping rates",
+      "requireAdobeAuth": false,
+      "runtimeAction": "shipstation/shipstation-shipping",
+      "webhook": {
+        "batch_name": "shipping_methods",
+        "fallback_error_message": "Unable to retrieve ShipStation shipping rates.",
+        "fields": [
+          {
+            "name": "rateRequest",
+            "source": "rateRequest"
+          }
+        ],
+        "hook_name": "shipstation_rates",
+        "method": "POST",
+        "required": false,
+        "webhook_method": "plugin.magento.out_of_process_shipping_methods.api.shipping_rate_repository.get_rates",
+        "webhook_type": "after"
+      }
+    }
+  ]
+}
