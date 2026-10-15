@@ -1,32 +1,18 @@
 {
   "name": "shipstation",
-  "version": "1.0.5",
+  "version": "2.0.0",
   "private": true,
   "dependencies": {
-    "@adobe/aio-lib-files": "^4.1.2",
-    "@adobe/aio-lib-ims": "^8.1.0",
-    "@adobe/aio-lib-state": "^5.1.0",
-    "@adobe/aio-sdk": "^6.0.0",
-    "@adobe/exc-app": "^1.4.17",
-    "@adobe/generator-app-api-mesh": "^0.3.1",
-    "@adobe/react-spectrum": "^3.43.0",
-    "@adobe/uix-guest": "^1.0.3",
-    "core-js": "^3.45.0",
-    "dotenv": "^17.2.1",
-    "got": "^11.8.6",
-    "jest": "^30.0.5",
-    "js-yaml": "^4.1.0",
-    "node-fetch": "^3.3.0",
-    "oauth-1.0a": "^2.2.6",
-    "react": "^19.1.1",
-    "react-dom": "^19.1.1",
-    "react-error-boundary": "^5.0.0",
-    "react-router": "^7.8.0",
-    "regenerator-runtime": "^0.14.1"
+    "@adobe/aio-commerce-lib-app": "^1.11.0",
+    "@adobe/aio-commerce-lib-auth": "^1.1.3",
+    "@adobe/aio-commerce-lib-config": "^1.8.0",
+    "@adobe/aio-sdk": "^6.0.0"
   },
   "devDependencies": {
     "@adobe/eslint-config-aio-lib-config": "^4.0.0",
     "@babel/eslint-parser": "^7.28.0",
+    "@babel/preset-env": "^7.28.0",
+    "@babel/preset-react": "^7.27.1",
     "eslint-config-prettier": "^10.1.8",
     "eslint-config-standard": "^17.1.0",
     "eslint-plugin-jsx-a11y": "^6.10.2",
@@ -34,7 +20,9 @@
     "eslint-plugin-react": "^7.37.5",
     "eslint-plugin-react-hooks": "^5.2.0",
     "husky": "^9.1.7",
-    "prettier": "^3.6.2"
+    "jest": "^30.0.5",
+    "prettier": "^3.6.2",
+    "typescript": "~6.0.3"
   },
   "parcel-ignore": [
     "serve-index"
@@ -48,16 +36,12 @@
     "format:fix": "npm run format:check -- --write",
     "code:check": "npm run format:check && npm run lint:check",
     "code:fix": "npm run format:fix && npm run lint:fix",
-    "create-shipping-carriers": "node -e \"require('./scripts/create-shipping-carriers').main('shipping-carriers.yaml')\"",
-    "sync-oauth-credentials": "node -e \"require('./scripts/sync-oauth-credentials').main()\"",
-    "prepare": "husky"
+    "prepare": "husky",
+    "fix-all": "npm run format:fix && npm run lint:fix"
   },
   "engines": {
     "node": "^14.18 || ^16.13 || >=18"
   },
-  "aio-app-builder-templates": [
-    "@adobe/generator-app-api-mesh"
-  ],
   "author": {
     "name": "Pedro Laris",
     "email": "pedro.laris@blueacornici.com"
@@ -79,5 +63,8 @@
       "name": "Maxime Carey",
       "email": "maxime.carey@blueacornici.com"
     }
-  ]
+  ],
+  "imports": {
+    "#app.commerce.config": "./src/commerce-extensibility-1/.generated/app.commerce.config.js"
+  }
 }
