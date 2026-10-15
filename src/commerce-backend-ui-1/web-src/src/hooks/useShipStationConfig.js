@@ -18,7 +18,14 @@ export function useShipStationConfigLoader(props, setFormState) {
       try {
         const data = await callAction(props, "shipstation/admin-config", "GET");
         if (data) {
-          setFormState((prevState) => ({ ...prevState, ...data.config }));
+          // The API key is write-only: the action never returns it.
+          const { hasShipstationApiKey, ...config } = data.config || {};
+          setFormState((prevState) => ({
+            ...prevState,
+            ...config,
+            shipstationApiKey: "",
+            hasShipstationApiKey,
+          }));
         }
         setStatusMsg("Config loaded successfully");
         setHasError(false);

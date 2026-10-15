@@ -49,7 +49,8 @@ export default function ShipstationConfigForm(props) {
   };
 
   const handleSave = async () => {
-    saveConfig(formState);
+    const { hasShipstationApiKey, ...config } = formState;
+    saveConfig(config);
   };
 
   const links = [
@@ -80,9 +81,15 @@ export default function ShipstationConfigForm(props) {
 
         <TextField
           label="API Key"
+          type="password"
           value={formState.shipstationApiKey}
           onChange={(val) => handleChange("shipstationApiKey", val)}
-          isRequired
+          description={
+            formState.hasShipstationApiKey
+              ? "A key is saved. Leave blank to keep it."
+              : undefined
+          }
+          isRequired={!formState.hasShipstationApiKey}
           isDisabled={loadHasError}
         />
         <TextField
